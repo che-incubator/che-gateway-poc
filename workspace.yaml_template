@@ -1,0 +1,30 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: {{WORKSPACE}}
+  labels:
+    app: {{WORKSPACE}}
+  namespace: {{WORKSPACE}}
+spec:
+  containers:
+  - name: server
+    image: quay.io/lkrejci/echo-server:latest
+    env:
+    - name: ECHO_NAME
+      value: "{{WORKSPACE}}"
+    - name: ECHO_PORT
+      value: "3000"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{WORKSPACE}}
+  namespace: {{WORKSPACE}}
+spec:
+  selector:
+    app: {{WORKSPACE}}
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000

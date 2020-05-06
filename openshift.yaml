@@ -1,0 +1,11 @@
+# The main route. Update the host to work in your environment.
+kind: Route
+apiVersion: v1
+metadata:
+  name: che-gateway
+spec:
+  host: test-che-gateway.apps-crc.testing
+  path: /
+  to:
+    kind: Service
+    name: che-gateway
