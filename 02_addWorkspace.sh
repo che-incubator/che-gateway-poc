@@ -3,7 +3,8 @@
 #set -x
 set -e
 
-CHE_NAMESPACE=che3
+CHE_NAMESPACE=che
+HOST=test-che-gateway.apps-crc.testing
 GATEWAY_POD=$( oc get pods -o json -n ${CHE_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
 
 ## random workspace suffix
@@ -46,8 +47,11 @@ done
 
 
 ## print all workspaces urls
-echo
 echo "http://test-che-gateway.apps-crc.testing"
-for WS in $( cat workspaces.db) ; do
+for WS in $( cat workspaces.db ) ; do
   echo "http://test-che-gateway.apps-crc.testing/${WS}"
 done
+
+sleep 1
+
+echo "${WS},${HOST},/${WS}" >> urls.csv

@@ -9,12 +9,10 @@ metadata:
 spec:
   containers:
   - name: server
-    image: quay.io/lkrejci/echo-server:latest
+    image: containous/whoami:v1.5.0
     env:
-    - name: ECHO_NAME
+    - name: WHOAMI_NAME
       value: "{{WORKSPACE}}"
-    - name: ECHO_PORT
-      value: "3000"
 ---
 kind: Service
 apiVersion: v1
@@ -27,4 +25,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 3000
+    targetPort: 80

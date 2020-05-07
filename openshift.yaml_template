@@ -4,7 +4,7 @@ apiVersion: v1
 metadata:
   name: che-gateway
 spec:
-  host: test-che-gateway.apps-crc.testing
+  host: {{HOST}}
   path: /
   to:
     kind: Service
