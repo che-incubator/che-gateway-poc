@@ -2,3 +2,4 @@ haproxy.cfg
 workspaces.db
 urls.csv
 perfReport_*/
+jmeter.log
