@@ -36,6 +36,10 @@ spec:
         image: bash
         command: ["sleep"]
         args: ["infinity"]
+      # - name: curl
+      #   image: curlimages/curl
+      #   command: ["sleep"]
+      #   args: ["infinity"]
       volumes:
       - name: config
         configMap:

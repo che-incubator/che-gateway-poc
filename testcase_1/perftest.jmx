@@ -16,19 +16,19 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="duration" elementType="Argument">
             <stringProp name="Argument.name">duration</stringProp>
-            <stringProp name="Argument.value">300</stringProp>
+            <stringProp name="Argument.value">30</stringProp>
             <stringProp name="Argument.desc">how long we should run  [s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspaces" elementType="Argument">
             <stringProp name="Argument.name">workspaces</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
+            <stringProp name="Argument.value">1</stringProp>
             <stringProp name="Argument.desc">number of workspaces</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspace_create_delay" elementType="Argument">
             <stringProp name="Argument.name">workspace_create_delay</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
+            <stringProp name="Argument.value">5</stringProp>
             <stringProp name="Argument.desc">delay between creation of a new workspace [s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
@@ -40,7 +40,7 @@
           </elementProp>
           <elementProp name="request_threads" elementType="Argument">
             <stringProp name="Argument.name">request_threads</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
+            <stringProp name="Argument.value">20</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -61,7 +61,7 @@
       </ThreadGroup>
       <hashTree>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-          <stringProp name="filename">/home/mvala/dev/haproxy-che-singlehost-poc/urls.csv</stringProp>
+          <stringProp name="filename">/home/mvala/dev/haproxy-che-singlehost-poc/testcase_1/workdir/urls.csv</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="variableNames"></stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -240,12 +240,12 @@
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${duration}</stringProp>
-        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="ThreadGroup.delay">${workspace_create_delay}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
-          <stringProp name="ConstantTimer.delay">${workspace_create_delay}000</stringProp>
+          <stringProp name="ConstantTimer.delay">${workspace_create_delay}00</stringProp>
         </ConstantTimer>
         <hashTree/>
         <SystemSampler guiclass="SystemSamplerGui" testclass="SystemSampler" testname="addWorkspace" enabled="true">
@@ -264,6 +264,7 @@
           <elementProp name="SystemSampler.environment" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
+          <stringProp name="SystemSampler.directory">/home/mvala/dev/haproxy-che-singlehost-poc/testcase_1</stringProp>
         </SystemSampler>
         <hashTree>
           <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Ignore this in report" enabled="true">
