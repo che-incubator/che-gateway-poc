@@ -3,3 +3,4 @@ workspaces.db
 urls.csv
 perfReport_*/
 jmeter.log
+workspaces.yaml_prepared

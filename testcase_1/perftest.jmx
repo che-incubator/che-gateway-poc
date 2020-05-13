@@ -16,13 +16,13 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="duration" elementType="Argument">
             <stringProp name="Argument.name">duration</stringProp>
-            <stringProp name="Argument.value">30</stringProp>
+            <stringProp name="Argument.value">200</stringProp>
             <stringProp name="Argument.desc">how long we should run  [s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspaces" elementType="Argument">
             <stringProp name="Argument.name">workspaces</stringProp>
-            <stringProp name="Argument.value">1</stringProp>
+            <stringProp name="Argument.value">25</stringProp>
             <stringProp name="Argument.desc">number of workspaces</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
@@ -34,13 +34,19 @@
           </elementProp>
           <elementProp name="loop_delay" elementType="Argument">
             <stringProp name="Argument.name">loop_delay</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
+            <stringProp name="Argument.value">50</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">[ms]</stringProp>
           </elementProp>
           <elementProp name="request_threads" elementType="Argument">
             <stringProp name="Argument.name">request_threads</stringProp>
             <stringProp name="Argument.value">20</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="workspace_initial_delay" elementType="Argument">
+            <stringProp name="Argument.name">workspace_initial_delay</stringProp>
+            <stringProp name="Argument.value">60</stringProp>
+            <stringProp name="Argument.desc">[s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -103,8 +109,8 @@
           <hashTree/>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
-              <stringProp name="951870634">Name: ${name}</stringProp>
-              <stringProp name="1026748418">Hostname: ${name}</stringProp>
+              <stringProp name="-1093803025">Name: che</stringProp>
+              <stringProp name="1178590023">Hostname: che</stringProp>
               <stringProp name="-1720548440">GET / HTTP/1.1</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
@@ -240,12 +246,12 @@
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${duration}</stringProp>
-        <stringProp name="ThreadGroup.delay">${workspace_create_delay}</stringProp>
+        <stringProp name="ThreadGroup.delay">${workspace_initial_delay}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
-          <stringProp name="ConstantTimer.delay">${workspace_create_delay}00</stringProp>
+          <stringProp name="ConstantTimer.delay">${workspace_create_delay}000</stringProp>
         </ConstantTimer>
         <hashTree/>
         <SystemSampler guiclass="SystemSamplerGui" testclass="SystemSampler" testname="addWorkspace" enabled="true">

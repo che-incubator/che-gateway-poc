@@ -12,5 +12,5 @@ else
 fi
 
 # reconfigure router and do live-reload
-fullReconfig ${CHE_NAMESPACE}
+fullReconfig ${POC_NAMESPACE}
 echo "${WS},${HOST},/${WS}" >> ${URLS_CSV}
