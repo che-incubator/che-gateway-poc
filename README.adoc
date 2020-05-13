@@ -1,0 +1,8 @@
+## Che Gateway POC
+
+This is a playground for POCs of the Che gateway and their performance testing.
+
+The Che gateway is a mechanism to enable our single host strategy on OpenShift using
+a custom HTTP gateway (aka reverse proxy) that makes the workspaces accessible on
+a subpath of a public endpoint.
+
