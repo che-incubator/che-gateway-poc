@@ -60,6 +60,7 @@ function reconfigRouter() {
 }
 
 function kickoffHaproxy() {
+  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
   if ! oc wait --for=condition=ready --timeout=300s pod ${GATEWAY_POD} -n ${POC_NAMESPACE}; then
     echo "gateway pod ${GATEWAY_POD} is not ready after 5 minute waiting. Something is wrong so end here!"
     exit 1
@@ -67,16 +68,19 @@ function kickoffHaproxy() {
 
   ## restart haproxy process
   # list processes
-  PROCESSES=$( oc exec ${GATEWAY_POD} -c controller -n ${POC_NAMESPACE} -- "ps" "-o" "pid,ppid,comm" | grep haproxy )
-  readarray -t PROCESSES <<<"$PROCESSES"
-  # find haproxy parent process, which has parent pid 0
-  PATTERN='\s+[0-9]+\s+0\s+haproxy'
-  for P in "${PROCESSES[@]}"; do
-    if [[ $P =~ ${PATTERN} ]] ; then
-      # found parent process
-      PID=$( echo ${P} | awk '{print $1;}' )
-      # SIGHUP signal to parent process
-      oc exec ${GATEWAY_POD} -c controller -- "kill" "-HUP" "${PID}"
+  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
+
+  PROCESSES=$( oc exec ${GATEWAY_POD} -c haproxy -n ${POC_NAMESPACE} -- "ls" "/proc" )
+  for P in ${PROCESSES}; do
+    if [[ "${P}" =~ ^[0-9]+$ ]]; then
+      PID_STATUS=$( oc exec ${GATEWAY_POD} -c haproxy -n ${POC_NAMESPACE} -- "cat" "/proc/${P}/status" )
+      #echo "${PID_STATUS}"
+      if echo "${PID_STATUS}" | grep 'haproxy' > /dev/null && echo "${PID_STATUS}" | grep 'PPid' | grep 0 > /dev/null; then
+        #set -x
+        oc exec ${GATEWAY_POD} -c haproxy -- "/bin/sh" "-c" "kill -HUP ${P}"
+        #set +x
+        return
+      fi
     fi
   done
 }

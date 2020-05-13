@@ -32,14 +32,6 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /usr/local/etc/haproxy/
-      - name: controller
-        image: bash
-        command: ["sleep"]
-        args: ["infinity"]
-      # - name: curl
-      #   image: curlimages/curl
-      #   command: ["sleep"]
-      #   args: ["infinity"]
       volumes:
       - name: config
         configMap:
