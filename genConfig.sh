@@ -1,22 +1,17 @@
 #!/bin/sh
 
 ## update haproxy configmap
-# generate config to file haproxy.cfg
+# generate config to file haproxy.cfg and cherouter.map
 function genConfig() {
-  WORKSPACES=$( cat ${WORKSPACES_DB} )
+    WORKSPACES=$( cat ${WORKSPACES_DB} )
 
   if [ -n ${1} ]; then
     NAMESPACE=${1}
   fi
 
-  FRONTENDS=""
   BACKENDS=""
+  rm -f ${HAPROXY_ROUTER_MAP}
   for WS in ${WORKSPACES}; do
-    FRONTENDS="${FRONTENDS}
-  acl is_${WS} path_beg /${WS}
-  use_backend ${WS} if is_${WS}
-    "
-
     if [ -z ${NAMESPACE} ]; then
       NS=${WS}
     else
@@ -28,11 +23,11 @@ backend ${WS}
   http-request set-path %[path,regsub(^/${WS}/?,/)]
   server ${WS} ${WS}:80
   "
+  echo "/${WS} ${WS}" >> ${HAPROXY_ROUTER_MAP}
   done
 
   cat >${HAPROXY_CFG} <<EOL
 global
-  debug
 
 defaults
   timeout connect 10s
@@ -43,7 +38,7 @@ defaults
 frontend che
   bind :8080
 
-  ${FRONTENDS}
+  use_backend %[path,map_beg(/usr/local/etc/haproxy/cherouter.map)]
 
   default_backend che-server
 
@@ -59,7 +54,7 @@ function reconfigRouter() {
   GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
 
   # update configmap
-  oc create configmap haproxy-config --from-file ${HAPROXY_CFG} -o yaml -n ${POC_NAMESPACE} --dry-run | oc replace -n ${POC_NAMESPACE} -f -
+  oc create configmap haproxy-config --from-file ${HAPROXY_CFG} --from-file ${HAPROXY_ROUTER_MAP} -o yaml -n ${POC_NAMESPACE} --dry-run | oc replace -n ${POC_NAMESPACE} -f -
   # update gateway pod's random annotation to force configmap reload
   oc patch pod ${GATEWAY_POD} --patch "{\"metadata\": {\"annotations\": {\"random\": \"${RANDOM}\"} } }"
 }

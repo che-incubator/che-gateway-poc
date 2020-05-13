@@ -52,7 +52,6 @@ metadata:
 data:
   haproxy.cfg: |
     global
-      debug
 
     defaults
       timeout connect 10s
@@ -63,11 +62,14 @@ data:
     frontend che
       bind :8080
 
+      use_backend %[path,map_beg(/usr/local/etc/haproxy/cherouter.map)]
+
       default_backend che-server
 
     backend che-server
       cookie SERVERUSED insert indirect nocache
       server server che:80
+  cherouter.map: |
 
 ---
 kind: Service

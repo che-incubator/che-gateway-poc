@@ -16,7 +16,15 @@ function cleanup() {
     COMMAND="${COMMAND} ${P}"
   done
   echo ${COMMAND}
-  ${COMMAND}
+
+  read -p "Are you sure you want to execute this command '${COMMAND}'? [y] " -n 1 -r
+  echo
+  if [[ ${REPLY} =~ ^[Yy]$ ]]; then
+    ${COMMAND}
+  else
+    echo "not brave enough?"
+    exit 1
+  fi
 
   rm -rf ${WORKDIR}
 }

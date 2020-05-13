@@ -16,13 +16,13 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="duration" elementType="Argument">
             <stringProp name="Argument.name">duration</stringProp>
-            <stringProp name="Argument.value">200</stringProp>
+            <stringProp name="Argument.value">30</stringProp>
             <stringProp name="Argument.desc">how long we should run  [s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspaces" elementType="Argument">
             <stringProp name="Argument.name">workspaces</stringProp>
-            <stringProp name="Argument.value">25</stringProp>
+            <stringProp name="Argument.value">0</stringProp>
             <stringProp name="Argument.desc">number of workspaces</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
@@ -34,13 +34,13 @@
           </elementProp>
           <elementProp name="loop_delay" elementType="Argument">
             <stringProp name="Argument.name">loop_delay</stringProp>
-            <stringProp name="Argument.value">50</stringProp>
+            <stringProp name="Argument.value">100</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">[ms]</stringProp>
           </elementProp>
           <elementProp name="request_threads" elementType="Argument">
             <stringProp name="Argument.name">request_threads</stringProp>
-            <stringProp name="Argument.value">20</stringProp>
+            <stringProp name="Argument.value">100</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspace_initial_delay" elementType="Argument">
@@ -67,7 +67,7 @@
       </ThreadGroup>
       <hashTree>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-          <stringProp name="filename">/home/mvala/dev/haproxy-che-singlehost-poc/testcase_1/workdir/urls.csv</stringProp>
+          <stringProp name="filename">/home/mvala/dev/haproxy-che-singlehost-poc/testcase_0/workdir/urls.csv</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="variableNames"></stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -86,7 +86,7 @@
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">${path}</stringProp>
+          <stringProp name="HTTPSampler.path">${path}/bench</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -107,7 +107,7 @@
             <intProp name="Assertion.test_type">8</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="false">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1093803025">Name: che</stringProp>
               <stringProp name="1178590023">Hostname: che</stringProp>
@@ -117,6 +117,16 @@
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49">1</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
@@ -236,53 +246,6 @@
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="add workspace" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${workspaces}</stringProp>
-        </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${duration}</stringProp>
-        <stringProp name="ThreadGroup.delay">${workspace_initial_delay}</stringProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-      </ThreadGroup>
-      <hashTree>
-        <SystemSampler guiclass="SystemSamplerGui" testclass="SystemSampler" testname="addWorkspace" enabled="true">
-          <boolProp name="SystemSampler.checkReturnCode">false</boolProp>
-          <stringProp name="SystemSampler.expectedReturnCode">0</stringProp>
-          <stringProp name="SystemSampler.command">/bin/sh</stringProp>
-          <elementProp name="SystemSampler.arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="Argument">
-                <stringProp name="Argument.name"></stringProp>
-                <stringProp name="Argument.value">02_addWorkspace.sh</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-          <elementProp name="SystemSampler.environment" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments"/>
-          </elementProp>
-          <stringProp name="SystemSampler.directory">/home/mvala/dev/haproxy-che-singlehost-poc/testcase_1</stringProp>
-        </SystemSampler>
-        <hashTree>
-          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Ignore this in report" enabled="true">
-            <stringProp name="cacheKey">true</stringProp>
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">prev.setIgnore();</stringProp>
-            <stringProp name="scriptLanguage">groovy</stringProp>
-          </JSR223PostProcessor>
-          <hashTree/>
-        </hashTree>
-      </hashTree>
-      <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
-        <stringProp name="ConstantTimer.delay">${workspace_create_delay}000</stringProp>
-      </ConstantTimer>
-      <hashTree/>
       <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
