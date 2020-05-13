@@ -7,6 +7,7 @@ YAMLS_DIR="$( dirname "${0}" )/../yamls"
 WORKDIR="$( dirname "${0}" )/workdir"
 HAPROXY_CFG="${WORKDIR}/haproxy.cfg"
 HAPROXY_ROUTER_MAP="${WORKDIR}/cherouter.map"
+HAPROXY_PID="${WORKDIR}/haproxy.pid"
 WORKSPACES_DB="${WORKDIR}/workspaces.db"
 URLS_CSV="${WORKDIR}/urls.csv"
 WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prepared

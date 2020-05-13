@@ -5,3 +5,4 @@ perfReport_*/
 jmeter.log
 workspaces.yaml_prepared
 cherouter.map
+haproxy.pid
