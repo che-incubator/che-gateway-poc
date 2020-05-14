@@ -25,6 +25,13 @@ spec:
       containers:
       - name: haproxy
         image: haproxy:2.1
+        # resources:
+        #   limits:
+        #     memory: "1Gi"
+        #     cpu: 500m
+        #   requests:
+        #     memory: "1Gi"
+        #     cpu: 500m
         command: ["haproxy"]
         args: ["-W", "-f", "/usr/local/etc/haproxy"]
         ports:
@@ -86,6 +93,15 @@ spec:
   containers:
   - name: server
     image: containous/whoami:v1.5.0
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: 750m
+      limits:
+        memory: "1Gi"
+        cpu: 2
+    command: ["/whoami"]
+    args: ["--port", "8888"]
     env:
     - name: WHOAMI_NAME
       value: "che"
@@ -100,4 +116,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: 8888

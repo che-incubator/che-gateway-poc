@@ -30,7 +30,7 @@ backend ${WS}
 global
 
 defaults
-  timeout connect 10s
+  timeout connect 5s
   timeout client 30s
   timeout server 30s
   mode http

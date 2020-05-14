@@ -1,7 +1,8 @@
 #!/bin/sh
 
 POC_NAMESPACE="${USER}-singlehostpoc"
-HOST="${POC_NAMESPACE}.apps-crc.testing"
+#HOST="${POC_NAMESPACE}.apps-crc.testing"
+HOST="${POC_NAMESPACE}.apps.che-dev.x6e0.p1.openshiftapps.com"
 YAMLS_DIR="$( dirname "${0}" )/../yamls"
 
 WORKDIR="$( dirname "${0}" )/workdir"

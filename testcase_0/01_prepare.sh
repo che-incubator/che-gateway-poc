@@ -6,7 +6,7 @@
 prepareWorkdir
 prepareInfra
 
-for I in {001..100}; do
+for I in {001..010}; do
   WS="ws-${I}"
   prepareService "${WS}" "${POC_NAMESPACE}"
   writeServiceToTest "${WS}"

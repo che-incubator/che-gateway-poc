@@ -1,8 +1,8 @@
 #!/bin/sh
 
 function prepareWorkdir() {
-  echo ${WORKDIR}
-  rm -f ${WORKDIR} && mkdir -p ${WORKDIR}
+  echo "${WORKDIR}"
+  rm -rf ${WORKDIR} && mkdir -p ${WORKDIR}
 }
 
 function prepareInfra() {
