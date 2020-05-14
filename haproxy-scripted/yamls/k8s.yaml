@@ -1,0 +1,15 @@
+# The main ingress. Update the host to work in your environment.
+kind: Ingress
+apiVersion: networking.k8s.io/v1beta1
+metadata:
+  name: che-gateway
+spec:
+  rules:
+  - host: test-che.192.168.99.148.nip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: che-gateway
+          servicePort: 80
+
