@@ -4,7 +4,7 @@ metadata:
   name: che-gateway
 spec:
   rules:
-  - host: test-che.192.168.99.148.nip.io
+  - host: {{HOST}}
     http:
       paths:
       - path: /

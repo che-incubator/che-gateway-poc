@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{WORKSPACE}}
+  namespace: {{NAMESPACE}}
+spec:
+  selector:
+    app: che
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8888

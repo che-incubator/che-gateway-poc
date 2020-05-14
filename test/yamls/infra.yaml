@@ -1,0 +1,24 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: che-gateway
+spec:
+  selector:
+    app: che-gateway
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: che
+spec:
+  selector:
+    app: che
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8888
