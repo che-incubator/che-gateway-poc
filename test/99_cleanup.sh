@@ -3,9 +3,9 @@
 . "$( dirname "${0}" )/env.sh"
 
 function cleanup() {
-  PROJECTS=$( oc get projects -o json | jq -r ".items[].metadata.name | select(. | startswith(\""${POC_NAMESPACE_MAIN}"\"))" )
+  PROJECTS=$( oc get projects -o json | jq -r ".items[].metadata.name | select(. | startswith(\""${POC_NAMESPACE}"\"))" )
   if [ -z "${PROJECTS}" ]; then
-    echo "no projects that starts with '${POC_NAMESPACE_MAIN}' found"
+    echo "no projects that starts with '${POC_NAMESPACE}' found"
     exit 1
   fi
 

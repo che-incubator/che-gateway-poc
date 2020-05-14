@@ -7,10 +7,10 @@ function prepareWorkdir() {
 }
 
 function prepareBaseInfra() {
-  oc new-project ${POC_NAMESPACE_MAIN}
-  oc apply -f ${YAMLS_DIR}/infra.yaml -n ${POC_NAMESPACE_MAIN}
-  sed "s/{{NAME}}/che/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${POC_NAMESPACE_MAIN} -f -
-  sed "s/{{HOST}}/${HOST}/g" ${YAMLS_DIR}/openshift.yaml_template | oc apply -n ${POC_NAMESPACE_MAIN} -f -
+  oc new-project ${POC_NAMESPACE}
+  oc apply -f ${YAMLS_DIR}/infra.yaml -n ${POC_NAMESPACE}
+  sed "s/{{NAME}}/che/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
+  sed "s/{{HOST}}/${HOST}/g" ${YAMLS_DIR}/openshift.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
 
   # add Che to tested URLs
   echo "che,${HOST},/" >> ${URLS_CSV}

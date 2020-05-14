@@ -11,3 +11,5 @@ prepareBaseInfra
 
 PrepareGatewayInfra
 prepareTestcase
+
+printWorkspaces

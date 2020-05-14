@@ -12,9 +12,9 @@ function prepareNewWorkspace() {
 
   # when no namespace received, use workspace name as a part of namespace name
   if [ -z ${2} ]; then
-    NS="${POC_NAMESPACE_WSBASE}${WS}"
+    NS="${POC_NAMESPACE}"
   else
-    NS=${1}
+    NS="${POC_NAMESPACE}-${2}"
   fi
   echo "creating ${WS} in ${NS}"
 
@@ -35,10 +35,27 @@ function createRandomWorkspace() {
 
   ## random workspace suffix
   WS_SUFFIX=$( head /dev/urandom | tr -dc a-z0-9 | head -c 10 ; echo '' )
+  WS="ws-${WS_SUFFIX}"\
+
+  createWorkspace ${WS} ${NS}
+}
+
+# $1 - workspace
+# $2 - namespace (optional)
+function createWorkspace() {
+  WS=${1}
+  # when no namespace received, use workspace name as a part of namespace name
+  if [ -z ${2} ]; then
+    NS="${POC_NAMESPACE}-${WS}"
+  else
+    NS=${1}
+  fi
+  echo "creating ${WS} in ${NS}"
+
   WS="ws-${WS_SUFFIX}"
   URL_PATH="${NS}-${WS}"
   prepareNewWorkspace ${WS} ${NS}
-  markWorkspaceToTest ${WS} ${URL_PATH}
+  markWorkspaceToTest ${NS} ${URL_PATH}
   writeWorkspaceToDb ${URL_PATH} "${WS}.${NS}.svc.cluster.local"
   createPreparedWorkspaces
   FullGatewayReconfig
@@ -74,4 +91,10 @@ function writeWorkspaceToDb() {
   fi
 
   echo "${URL_PATH},${SERVICE_NAME}" >> ${WORKSPACES_DB}
+}
+
+function printWorkspaces() {
+  while IFS=, read -r URL_PATH SERVICE; do
+    echo "http://${HOST}/${URL_PATH}"
+  done < ${WORKSPACES_DB}
 }

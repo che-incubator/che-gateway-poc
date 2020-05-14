@@ -48,19 +48,19 @@ EOL
 }
 
 function reconfigRouter() {
-  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE_MAIN} | jq '.items[].metadata.name' -r | grep che-gateway )
+  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
 
   # update configmap
-  oc create configmap haproxy-config --from-file ${HAPROXY_CFG} --from-file ${HAPROXY_ROUTER_MAP} -o yaml -n ${POC_NAMESPACE_MAIN} --dry-run | oc replace -n ${POC_NAMESPACE_MAIN} -f -
+  oc create configmap haproxy-config --from-file ${HAPROXY_CFG} --from-file ${HAPROXY_ROUTER_MAP} -o yaml -n ${POC_NAMESPACE} --dry-run | oc replace -n ${POC_NAMESPACE} -f -
   # update gateway pod's random annotation to force configmap reload
   oc patch pod ${GATEWAY_POD} --patch "{\"metadata\": {\"annotations\": {\"random\": \"${RANDOM}\"} } }"
 }
 
 function findHaproxyPid() {
-  PROCESSES=$( oc exec ${GATEWAY_POD} -c haproxy -n ${POC_NAMESPACE_MAIN} -- "ls" "/proc" )
+  PROCESSES=$( oc exec ${GATEWAY_POD} -c haproxy -n ${POC_NAMESPACE} -- "ls" "/proc" )
   for P in ${PROCESSES}; do
     if [[ "${P}" =~ ^[0-9]+$ ]]; then
-      PID_STATUS=$( oc exec ${GATEWAY_POD} -c haproxy -n ${POC_NAMESPACE_MAIN} -- "cat" "/proc/${P}/status" )
+      PID_STATUS=$( oc exec ${GATEWAY_POD} -c haproxy -n ${POC_NAMESPACE} -- "cat" "/proc/${P}/status" )
       #echo "${PID_STATUS}"
       if echo "${PID_STATUS}" | grep 'haproxy' > /dev/null && echo "${PID_STATUS}" | grep 'PPid' | grep 0 > /dev/null; then
         echo ${P} > ${HAPROXY_PID}
@@ -73,15 +73,15 @@ function findHaproxyPid() {
 }
 
 function kickoffHaproxy() {
-  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE_MAIN} | jq '.items[].metadata.name' -r | grep che-gateway )
-  if ! oc wait --for=condition=ready --timeout=300s pod ${GATEWAY_POD} -n ${POC_NAMESPACE_MAIN}; then
+  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
+  if ! oc wait --for=condition=ready --timeout=300s pod ${GATEWAY_POD} -n ${POC_NAMESPACE}; then
     echo "gateway pod ${GATEWAY_POD} is not ready after 5 minute waiting. Something is wrong so end here!"
     exit 1
   fi
 
   ## restart haproxy process
   # list processes
-  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE_MAIN} | jq '.items[].metadata.name' -r | grep che-gateway )
+  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
   if [ ! -f ${HAPROXY_PID} ]; then
     findHaproxyPid
   fi

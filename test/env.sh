@@ -4,9 +4,8 @@ GATEWAY=haproxy-scripted
 TESTCASE=0
 USER=mvala
 
-POC_NAMESPACE_MAIN="${USER}-singlehostpoc"
-POC_NAMESPACE_WSBASE="${POC_NAMESPACE_MAIN}-ws"
-HOST="${POC_NAMESPACE_MAIN}.apps-crc.testing"
+POC_NAMESPACE="${USER}-singlehostpoc"
+HOST="${POC_NAMESPACE}.apps-crc.testing"
 #HOST="${POC_NAMESPACE}.apps.che-dev.x6e0.p1.openshiftapps.com"
 YAMLS_DIR="$( dirname "${0}" )/yamls"
 TESTCASES_DIR="$( dirname "${0}" )/testcases"
