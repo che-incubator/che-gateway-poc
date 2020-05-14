@@ -36,9 +36,10 @@ function createRandomWorkspace() {
   ## random workspace suffix
   WS_SUFFIX=$( head /dev/urandom | tr -dc a-z0-9 | head -c 10 ; echo '' )
   WS="ws-${WS_SUFFIX}"
+  URL_PATH="${NS}-${WS}"
   prepareNewWorkspace ${WS} ${NS}
-  markWorkspaceToTest ${WS} ${NS}
-  writeWorkspaceToDb ${WS} "${WS}.${NS}.svc.cluster.local"
+  markWorkspaceToTest ${WS} ${URL_PATH}
+  writeWorkspaceToDb ${URL_PATH} "${WS}.${NS}.svc.cluster.local"
   createPreparedWorkspaces
   FullGatewayReconfig
 }

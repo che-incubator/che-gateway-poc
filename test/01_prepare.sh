@@ -6,8 +6,6 @@ set -e
 parseArgs
 importTestFunctions
 
-set -x
-
 prepareWorkdir
 prepareBaseInfra
 
