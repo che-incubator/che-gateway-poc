@@ -1,0 +1,28 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: {{WORKSPACE}}
+  labels:
+    app: {{WORKSPACE}}
+  namespace: {{NAMESPACE}}
+spec:
+  containers:
+  - name: server
+    image: containous/whoami:v1.5.0
+    env:
+    - name: WHOAMI_NAME
+      value: "{{WORKSPACE}}"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{WORKSPACE}}
+  namespace: {{NAMESPACE}}
+spec:
+  selector:
+    app: {{WORKSPACE}}
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8888

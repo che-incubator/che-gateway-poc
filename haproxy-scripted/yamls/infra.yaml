@@ -1,0 +1,119 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: che-gateway
+  labels:
+    app: che-gateway
+  annotations:
+    blabol: "1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: che-gateway
+  template:
+    metadata:
+      labels:
+        app: che-gateway
+    spec:
+      shareProcessNamespace: true
+      securityContext:
+        capabilities:
+          add:
+          - SYS_PTRACE
+      containers:
+      - name: haproxy
+        image: haproxy:2.1
+        # resources:
+        #   limits:
+        #     memory: "1Gi"
+        #     cpu: 500m
+        #   requests:
+        #     memory: "1Gi"
+        #     cpu: 500m
+        command: ["haproxy"]
+        args: ["-W", "-f", "/usr/local/etc/haproxy"]
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: config
+          mountPath: /usr/local/etc/haproxy/
+      volumes:
+      - name: config
+        configMap:
+          name: haproxy-config
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: haproxy-config
+data:
+  haproxy.cfg: |
+    global
+
+    defaults
+      timeout connect 10s
+      timeout client 30s
+      timeout server 30s
+      mode http
+
+    frontend che
+      bind :8080
+
+      use_backend %[path,map_beg(/usr/local/etc/haproxy/cherouter.map)]
+
+      default_backend che-server
+
+    backend che-server
+      cookie SERVERUSED insert indirect nocache
+      server server che:80
+  cherouter.map: |
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: che-gateway
+spec:
+  selector:
+    app: che-gateway
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: che
+  labels:
+    app: che
+spec:
+  containers:
+  - name: server
+    image: containous/whoami:v1.5.0
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: 750m
+      limits:
+        memory: "1Gi"
+        cpu: 2
+    command: ["/whoami"]
+    args: ["--port", "8888"]
+    env:
+    - name: WHOAMI_NAME
+      value: "che"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: che
+spec:
+  selector:
+    app: che
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8888
