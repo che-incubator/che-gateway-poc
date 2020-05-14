@@ -1,0 +1,123 @@
+# This file defines the main infrastructure components of the "che server".
+# It contains the "gateway" implemented using Traefik and the "che server"
+# implemented as a simple nginx server serving one static file.
+---
+
+# This is the Gateway implemented using Traefik. This is where the inbound
+# traffic gets handled.
+kind: Pod
+apiVersion: v1
+metadata:
+  namespace: gtw-che
+  name: che-gateway
+  labels:
+    app: che-gateway 
+spec:
+  serviceAccountName: gateway-config
+  containers:
+  - name: traefik
+    image: quay.io/lkrejci/traefik-openshift:2.2.0
+    volumeMounts:
+    - name: config
+      mountPath: /etc/traefik
+    - name: exposures
+      mountPath: "/che-exposures"
+  - name: config-map-sync
+    image: quay.io/lkrejci/cm-bump:latest
+    env:
+    - name: CM_DIR
+      value: "/che-exposures"
+    - name: CM_LABELS
+      value: "che-config-role==gateway"
+    - name: CM_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    - name: CM_LOG
+      value: info,cm_bump=debug
+    volumeMounts:
+    - name: exposures
+      mountPath: "/che-exposures"
+  volumes:
+  - name: config
+    configMap:
+      name: traefik-config
+  - name: exposures
+    emptyDir: {}
+---
+
+# This is the main configuration for Traefik. We configure it to listen
+# for changes in the "/che-exposures" directory - where we put all the
+# configuration from the "che-exposures" config map.
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: gtw-che
+  name: traefik-config
+data:
+  traefik.yml: |
+    global:
+      checkNewVersion: false
+      sendAnonymousUsage: false
+    entrypoints:
+      http:
+        address: ":8080"
+      https:
+        address: ":8443"   
+    providers:
+      file:
+        directory: "/che-exposures"
+        watch: true
+    log:
+      level: DEBUG
+---
+
+# A simple service in front of the gateway pod so that we can expose it
+# using an ingress.
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: gtw-che
+  name: che-gateway
+spec:
+  selector:
+    app: che-gateway
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+
+# The "che server" pod. This is just nginx with a single page defined
+# using a config map.
+kind: Pod
+apiVersion: v1
+metadata:
+  namespace: gtw-che
+  name: che
+  labels:
+    app: che
+spec:
+  containers:
+  - name: server
+    image: quay.io/lkrejci/echo-server:latest
+    env:
+    - name: ECHO_NAME
+      value: "Che"
+    - name: ECHO_PORT
+      value: "3000"
+---
+# A service to which the traffic to the main server will be routed
+# by Traefik.
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: gtw-che
+  name: che
+spec:
+  selector:
+    app: che
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000

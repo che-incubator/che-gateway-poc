@@ -1,0 +1,16 @@
+# The main ingress. Update the host to work in your environment.
+kind: Ingress
+apiVersion: networking.k8s.io/v1beta1
+metadata:
+  namespace: gtw-che
+  name: che-gateway 
+spec:
+  rules:
+  - host: che-gtw.192.168.99.151.nip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: che-gateway
+          servicePort: 80
+

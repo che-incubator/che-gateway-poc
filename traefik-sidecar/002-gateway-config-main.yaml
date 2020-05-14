@@ -1,0 +1,21 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: gtw-che
+  name: gateway-config-main 
+  labels:
+    che-config-role: gateway
+data:
+  che.yml: |
+    http:
+      routers:
+        che:
+          rule: "PathPrefix(`/`)"
+          service: che-service
+          priority: 1
+      services:
+        che-service:
+          loadBalancer:
+            servers:
+            - url: 'http://che'          
