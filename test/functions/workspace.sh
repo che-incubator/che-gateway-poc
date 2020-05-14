@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#TODO: prepare namespace function
+
 # $1 - workspace
 # $2 - namespace (optional)
 function prepareNewWorkspace() {
@@ -14,10 +16,11 @@ function prepareNewWorkspace() {
   if [ -z ${2} ]; then
     NS="${POC_NAMESPACE}"
   else
-    NS="${POC_NAMESPACE}-${2}"
+    NS="${2}"
   fi
   echo "creating ${WS} in ${NS}"
 
+  #TODO: let caller prepare the namespace so this is not called gazzilion times
   # if namespace does not exist, create new namespace and che pod there
   if ! oc get namespaces | egrep "${NS} "; then
     oc create namespace "${NS}"
