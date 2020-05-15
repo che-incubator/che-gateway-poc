@@ -13,7 +13,7 @@ function prepareBaseInfra() {
   sed "s/{{HOST}}/${HOST}/g" ${YAMLS_DIR}/openshift.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
 
   # add Che to tested URLs
-  echo "che,${HOST},/" >> ${URLS_CSV}
+  echo "che,${HOST}," >> ${URLS_CSV}
 
   echo "http://${HOST}"
 }
