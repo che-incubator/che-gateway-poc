@@ -4,6 +4,7 @@ function prepareWorkdir() {
   echo "${WORKDIR}"
   rm -rf ${WORKDIR} && mkdir -p ${WORKDIR}
   echo "name,host,path" > ${URLS_CSV}
+  touch "${WORKSPACES_DB}"
 }
 
 function prepareBaseInfra() {

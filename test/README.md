@@ -5,6 +5,7 @@
 ### Prerequisites
   - have Openshift cluster running and `oc` working
   - have `docker` (works with podman, but we're running `docker` command here so `sudo dnf install -y podman-docker` :) )
+  - have `jq`
 
 ### Run
   - go to `<che-gateway-poc>/test` (scripts expects to be run here)
