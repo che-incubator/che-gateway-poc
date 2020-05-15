@@ -26,8 +26,8 @@ function parseArgs() {
       exit 1
     fi
   fi
-  GATEWAY="${BASE_DIR}/${GATEWAY}"
-  if [ ! -d "${GATEWAY}" ]; then
+  GATEWAY_DIR="${BASE_DIR}/${GATEWAY}"
+  if [ ! -d "${GATEWAY_DIR}" ]; then
     echo "invalid gateway '${GATEWAY}'"
     exit 1
   fi
@@ -40,7 +40,7 @@ function parseArgs() {
       exit 1
     fi
   fi
-  TESTCASE_DIR="${GATEWAY}/tc_${TESTCASE}"
+  TESTCASE_DIR="${GATEWAY_DIR}/tc_${TESTCASE}"
   if [ ! -d "${TESTCASE_DIR}" ]; then
     echo "invalid TESTCASE '${TESTCASE}'"
     exit 1
@@ -48,9 +48,9 @@ function parseArgs() {
 }
 
 function importTestFunctions() {
-  . "${GATEWAY}/env.sh"
-  . "${GATEWAY}/functions/prepare.sh"
-  . "${GATEWAY}/functions/gateway.sh"
+  . "${GATEWAY_DIR}/env.sh"
+  . "${GATEWAY_DIR}/functions/prepare.sh"
+  . "${GATEWAY_DIR}/functions/gateway.sh"
 
   . "${TESTCASES_DIR}/tc_${TESTCASE}/prepare.sh"
 }
