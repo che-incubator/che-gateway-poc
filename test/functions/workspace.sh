@@ -97,7 +97,7 @@ function writeWorkspaceToDb() {
 }
 
 function printWorkspaces() {
-  while IFS=, read -r NAME HOST URL_PATH; do
-    echo "${NAME} -> http://${HOST}${URL_PATH}"
+  while IFS=, read -r NAME URL_HOST URL_PATH; do
+    echo "${NAME} -> http://${URL_HOST}${URL_PATH}"
   done < ${URLS_CSV}
 }

@@ -19,30 +19,23 @@ function prepareBaseInfra() {
 }
 
 function parseArgs() {
-  if [ ! -z ${1} ]; then
-    GATEWAY=${1}
-  fi
   if [ -z ${GATEWAY} ]; then
     echo "no <GATEWAY> set"
     exit 1
   fi
 
-  GATEWAY_DIR="${BASE_DIR}/${GATEWAY}"
+  readonly GATEWAY_DIR="${BASE_DIR}/${GATEWAY}"
   if [ ! -d "${GATEWAY_DIR}" ]; then
     echo "invalid gateway '${GATEWAY}'"
     exit 1
   fi
 
-
-  if [ ! -z ${2} ]; then
-    TESTCASE=${2}
-  fi
   if [ -z ${TESTCASE} ]; then
     echo "no <TESTCASE> set"
     exit 1
   fi
 
-  TESTCASE_DIR="${TESTCASES_DIR}/tc_${TESTCASE}"
+  readonly TESTCASE_DIR="${TESTCASES_DIR}/tc_${TESTCASE}"
   if [ ! -d "${TESTCASE_DIR}" ]; then
     echo "invalid TESTCASE '${TESTCASE}'"
     exit 1

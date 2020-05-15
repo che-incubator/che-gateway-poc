@@ -1,7 +1,7 @@
 #!/bin/sh
 
-GATEWAY=${GATEWAY:-haproxy-scripted}
-TESTCASE=${TESTCASE:-0}
+readonly GATEWAY=${1:-${GATEWAY:-haproxy-scripted}}
+readonly TESTCASE=${2:-${TESTCASE:-0}}
 
 if [ -z ${USER} ]; then
   echo "\$USER variable is empty. You have to set it. It's used as prefix for created namespaces."
@@ -9,18 +9,18 @@ if [ -z ${USER} ]; then
 fi
 echo "username '${USER}' will be used as prefix for namespaces"
 
-POC_NAMESPACE="${USER}-singlehostpoc"
-HOST="${POC_NAMESPACE}.apps-crc.testing"
+readonly POC_NAMESPACE="${USER}-singlehostpoc"
+readonly HOST="${POC_NAMESPACE}.apps-crc.testing"
 #HOST="${POC_NAMESPACE}.apps.che-dev.x6e0.p1.openshiftapps.com"
-YAMLS_DIR="$( dirname "${0}" )/yamls"
+readonly YAMLS_DIR="$( dirname "${0}" )/yamls"
 
-BASE_DIR="$( realpath "$( dirname "${0}" )/.." )"
-TESTCASES_DIR="$( realpath "$( dirname "${0}" )/testcases" )"
-REPORTS_DIR="$( realpath "$( dirname "${0}" )/reports" )"
-WORKDIR="$( realpath "$( dirname "${0}" )/workdir" )"
-WORKSPACES_DB="${WORKDIR}/workspaces.db"
-URLS_CSV="${WORKDIR}/urls.csv"
-WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prep
+readonly BASE_DIR="$( realpath "$( dirname "${0}" )/.." )"
+readonly TESTCASES_DIR="$( realpath "$( dirname "${0}" )/testcases" )"
+readonly REPORTS_DIR="$( realpath "$( dirname "${0}" )/reports" )"
+readonly WORKDIR="$( realpath "$( dirname "${0}" )/workdir" )"
+readonly WORKSPACES_DB="${WORKDIR}/workspaces.db"
+readonly URLS_CSV="${WORKDIR}/urls.csv"
+readonly WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prep
 
 #. "$( dirname "${0}" )/functions/cleanup.sh"
 . "$( dirname "${0}" )/functions/prepare.sh"
@@ -29,4 +29,4 @@ WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prep
 parseArgs "$@"
 importTestFunctions
 
-REPORT_DIR="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( date +%s )"
+readonly REPORT_DIR="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( date +%s )"
