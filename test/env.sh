@@ -21,11 +21,11 @@ readonly WORKDIR="$( realpath "$( dirname "${0}" )/workdir" )"
 readonly WORKSPACES_DB="${WORKDIR}/workspaces.db"
 readonly URLS_CSV="${WORKDIR}/urls.csv"
 readonly WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prep
+readonly JMETER_TEST_FILE=${WORKDIR}/test.jmx
 
 #. "$( dirname "${0}" )/functions/cleanup.sh"
 . "$( dirname "${0}" )/functions/prepare.sh"
 . "$( dirname "${0}" )/functions/workspace.sh"
-. "$( dirname "${0}" )/functions/test.sh"
 parseArgs "$@"
 importTestFunctions
 

@@ -5,6 +5,7 @@ function prepareWorkdir() {
   rm -rf ${WORKDIR} && mkdir -p ${WORKDIR}
   echo "name,host,path" > ${URLS_CSV}
   touch "${WORKSPACES_DB}"
+  cp "${TESTCASES_DIR}/tc_${TESTCASE}/test.jmx" ${JMETER_TEST_FILE}
 }
 
 function prepareBaseInfra() {
