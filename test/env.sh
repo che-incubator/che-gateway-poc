@@ -1,7 +1,7 @@
 #!/bin/sh
 
-GATEWAY=haproxy-scripted
-TESTCASE=0
+GATEWAY=${GATEWAY:-haproxy-scripted}
+TESTCASE=${TESTCASE:-0}
 
 if [ -z ${USER} ]; then
   echo "\$USER variable is empty. You have to set it. It's used as prefix for created namespaces."
@@ -26,7 +26,7 @@ WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prep
 . "$( dirname "${0}" )/functions/prepare.sh"
 . "$( dirname "${0}" )/functions/workspace.sh"
 . "$( dirname "${0}" )/functions/test.sh"
-parseArgs
+parseArgs "$@"
 importTestFunctions
 
 REPORT_DIR="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( date +%s )"
