@@ -1,9 +1,6 @@
 #!/bin/sh
 
 function FullGatewayReconfig() {
-    mkdir -p ${CONFIGMAPS_DIR}
-    rm -Rf ${CONFIGMAPS_DIR}/*
-
     NAME=0
     while IFS=, read -r WS_PATH SERVICE; do
         CONFIG_MAP="
