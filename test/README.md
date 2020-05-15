@@ -52,9 +52,9 @@ TBD
 
 ### What is already prepared by generic functions
   - **Che** pod and service
-    - reachable at `che:80` withing same namespace as Gateway
+    - reachable at `che:80` within same namespace as Gateway
   - Public route with gateway service
-    - 
+    - Service is set to label `app: che-gateway` port `8080`
 
 ### Useful variables
   - `${WORKDIR}` - folder created for specific test run. Is cleaned
