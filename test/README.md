@@ -8,11 +8,11 @@
 
 ### Run
   - go to `<che-gateway-poc>/test` (scripts expects to be run here)
-  - all main scripts (prefixed with number and has `x` permission) accepts 2 parameters `<gateway>` and `<testcase>` (example: `./01_prepare haproxy-scripted 1`). These can be set as environment variables as well. If so, no parameters are needed. *Default values are `haproxy-scripted` and `0`. This is used for testing. *
+  - all main scripts (prefixed with number and has `+x` permission) accepts 2 parameters `<gateway>` and `<testcase>` (example: `./01_prepare haproxy-scripted 1`). These can be set as environment variables as well. If so, no parameters are needed. *Default values are `haproxy-scripted` and `0`. This is used for testing.*
     - `<gateway>` - folder name of gateway implementation (exapmle: `haproxy-scripted`, `nginx-custom-image`, ...). Can be set with `GATEWAY` env variable.
     - `<testcase>` - number of test case (example: `0`, `1`, ...). Can be set with `TESTCASE` env variable.
-  - You should run all scripts with same `gateway` and `testcase`. **Prepare** for one testcase and **run** for another will lead to unpredictable outcome.
-  - see `<che-gateway-poc>/test/env.sh` for global variables that are used across the scripts. E.g. `HOST` is hostname of the main Route and is important to be set correctly.
+  - You should run all scripts with same `gateway` and `testcase`. (*Prepare* for one testcase and *run* for another will lead to unpredictable outcome.)
+  - see `[<che-gateway-poc>/test/env.sh](env.sh)` for global variables that are used across the scripts. E.g. `HOST` is hostname of the main Route and is important to be set correctly.
 
   1. run `./01_prepare.sh`
   1. run `./02_run.sh`
