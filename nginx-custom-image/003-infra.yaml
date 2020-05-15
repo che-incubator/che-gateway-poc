@@ -27,3 +27,11 @@ spec:
       value: info,cm_bump=trace
     - name: DNS_TTL
       value: 5s
+    volumeMounts:
+    - name: nginx-conf
+      mountPath: /etc/nginx/nginx.conf
+      subPath: nginx.conf
+  volumes:
+  - name: nginx-conf
+    configMap:
+      name: gateway-server-config
