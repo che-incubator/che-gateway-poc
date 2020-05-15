@@ -4,7 +4,7 @@
 
 ### Prerequisites
   - have Openshift cluster running and `oc` working
-  - have **JMeter**
+  - have [*JMeter*](https://jmeter.apache.org/download_jmeter.cgi)
 
 ### Run
   - go to `<che-gateway-poc>/test` (scripts expects to be run here)
@@ -51,15 +51,15 @@ TBD
 ## HOWTO Implement new gateway
 
 ### What is already prepared by generic functions
-  - **Che** pod and service
+  - *Che* pod and service
     - reachable at `che:80` within same namespace as Gateway
   - Public route with gateway service
     - Service is set to label `app: che-gateway` port `8080`
 
 ### Useful variables
   - `${WORKDIR}` - folder created for specific test run. Is cleaned
-  - `${WORKSPACES_DB}` - CSV file with all **workspaces** that shouls be routed by gateway
-  - `${POC_NAMESPACE}` - main namespace where is **Che**+service, Gateway+service pods, and public Route
+  - `${WORKSPACES_DB}` - CSV file with all *workspaces* that shouls be routed by gateway
+  - `${POC_NAMESPACE}` - main namespace where is *Che*+service, Gateway+service pods, and public Route
 
 ### Implementation
   - Every gateway implementation must have:
