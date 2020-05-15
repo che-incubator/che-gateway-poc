@@ -30,7 +30,7 @@ Cleans the cluster (deletes projects with common prefix) and remove local workdi
 
 ## Testcases
 
-All common logic of testcases is at `<che-gateway-poc>/test/testcases/<testcase>`. Gateway specific functions are then at `<che-gateway-poc>/<gateway>/functions` folder.
+All common logic of testcases is at `<che-gateway-poc>/test/testcases/tc_<testcase>`. Gateway specific functions are then at `<che-gateway-poc>/<gateway>/functions` folder.
 
 ### Testcase 0 (`tc_0`)
   - testcase for debugging these scripts
