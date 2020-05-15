@@ -22,8 +22,8 @@ function prepareNewWorkspace() {
 
   #TODO: let caller prepare the namespace so this is not called gazzilion times
   # if namespace does not exist, create new namespace and che pod there
-  if ! oc get namespaces | egrep "${NS} "; then
-    oc create namespace "${NS}"
+  if ! oc get projects | egrep "${NS} "; then
+    oc new-project "${NS}"
     sed "s/{{NAME}}/${NS}/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${NS} -f -
   fi
 
