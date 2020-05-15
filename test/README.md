@@ -4,7 +4,7 @@
 
 ### Prerequisites
   - have Openshift cluster running and `oc` working
-  - have [*JMeter*](https://jmeter.apache.org/download_jmeter.cgi)
+  - have `docker` (works with podman, but we're running `docker` command here so `sudo dnf install -y podman-docker` :) )
 
 ### Run
   - go to `<che-gateway-poc>/test` (scripts expects to be run here)
