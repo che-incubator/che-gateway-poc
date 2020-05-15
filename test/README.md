@@ -19,32 +19,32 @@
   1. run `./99_cleanup.sh`
 
 ### Main scripts
-## 01_prepare.sh
+#### 01_prepare.sh
 Prepares whole infrastructure and folder structure for given `gateway` and `testcase`.
 
-## 02_run.sh
+#### 02_run.sh
 Performs given `testcase` with given `gateway` and write the report.
 
-## 99_cleanup.sh
+#### 99_cleanup.sh
 Cleans the cluster (deletes projects with common prefix) and remove local workdir folder. It keeps the test report.
 
-## Testcases
+### Testcases
 
 All common logic of testcases is at `<che-gateway-poc>/test/testcases/tc_<testcase>`. Gateway specific functions are then at `<che-gateway-poc>/<gateway>/functions` folder.
 
-### Testcase 0 (`tc_0`)
+#### Testcase 0 (`tc_0`)
   - testcase for debugging these scripts
 
-### Testcase 1 (`tc_1`)
+#### Testcase 1 (`tc_1`)
 TBD
 
-### Testcase 2 (`tc_2`)
+#### Testcase 2 (`tc_2`)
 TBD
 
-### Testcase 3 (`tc_3`)
+#### Testcase 3 (`tc_3`)
 TBD
 
-### Testcase 4 (`tc_4`)
+#### Testcase 4 (`tc_4`)
 TBD
 
 
