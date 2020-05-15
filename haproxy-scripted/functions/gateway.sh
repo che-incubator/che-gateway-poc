@@ -53,7 +53,7 @@ function reconfigRouter() {
   # update configmap
   oc create configmap haproxy-config --from-file ${HAPROXY_CFG} --from-file ${HAPROXY_ROUTER_MAP} -o yaml -n ${POC_NAMESPACE} --dry-run | oc replace -n ${POC_NAMESPACE} -f -
   # update gateway pod's random annotation to force configmap reload
-  oc patch pod ${GATEWAY_POD} --patch "{\"metadata\": {\"annotations\": {\"random\": \"${RANDOM}\"} } }"
+  oc patch pod ${GATEWAY_POD} -n ${POC_NAMESPACE} --patch "{\"metadata\": {\"annotations\": {\"random\": \"${RANDOM}\"} } }"
 }
 
 function findHaproxyPid() {
@@ -86,7 +86,7 @@ function kickoffHaproxy() {
     findHaproxyPid
   fi
   #set -x
-  oc exec ${GATEWAY_POD} -c haproxy -- "/bin/sh" "-c" "kill -HUP $( cat ${HAPROXY_PID} )"
+  oc exec ${GATEWAY_POD} -n ${POC_NAMESPACE} -c haproxy -- "/bin/sh" "-c" "kill -HUP $( cat ${HAPROXY_PID} )"
   #set +x
 }
 
