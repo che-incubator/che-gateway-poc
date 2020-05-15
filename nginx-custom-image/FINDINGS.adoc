@@ -1,0 +1,11 @@
+## Findings
+
+We probably need to establish the route only after the service has a valid dns name
+or we know the workspace pod IP. That is because nginx resolves the IP of the provided
+DNS name (we use the service host name in this POC) while it applies the configuration
+and refuses to apply the config if the dns name doesn't resolve at that time. This can
+be overcome by defining the proxy_pass target as a variable but that in turn requires
+an explicit "resolver" which is hard to specify dynamically. This would require a writable
+main configuration what would be modified by the entrypoint.sh to contain the same resolver
+as specified in the /etc/resolv.conf.
+

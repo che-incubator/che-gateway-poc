@@ -1,14 +1,6 @@
-# This file defines the main infrastructure components of the "che server".
-# It contains the "gateway" implemented using nginx and the "che server"
-# implemented as a simple nginx server serving one static file.
----
-
-# This is the Gateway implemented using Traefik. This is where the inbound
-# traffic gets handled.
 kind: Pod
 apiVersion: v1
 metadata:
-  namespace: gtw-che
   name: che-gateway
   labels:
     app: che-gateway 
@@ -17,14 +9,10 @@ spec:
   containers:
   - name: gateway 
     image: quay.io/lkrejci/cm-bump-nginx-prototype 
-    volumeMounts:
-    - name: configs 
-      mountPath: "/tmp/nginx-locations"
+    imagePullPolicy: Always
     env:
     - name: CM_TLS_VERIFY
       value: "false"
-    - name: CM_DIR
-      value: "/tmp/nginx-locations"
     - name: CM_LABELS
       value: "che-config-role==gateway"
     - name: CM_NAMESPACE
@@ -37,60 +25,5 @@ spec:
       value: SIGHUP
     - name: CM_LOG
       value: info,cm_bump=trace
-    volumeMounts:
-    - name: configs
-      mountPath: "/tmp/nginx-locations"
-  volumes:
-  - name: configs
-    emptyDir: {}
----
-
-# A simple service in front of the gateway pod so that we can expose it
-# using an ingress.
-kind: Service
-apiVersion: v1
-metadata:
-  namespace: gtw-che
-  name: che-gateway
-spec:
-  selector:
-    app: che-gateway
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
----
-
-# The "che server" pod. This is just nginx with a single page defined
-# using a config map.
-kind: Pod
-apiVersion: v1
-metadata:
-  namespace: gtw-che
-  name: che
-  labels:
-    app: che
-spec:
-  containers:
-  - name: server
-    image: quay.io/lkrejci/echo-server:latest
-    env:
-    - name: ECHO_NAME
-      value: "Che"
-    - name: ECHO_PORT
-      value: "3000"
----
-# A service to which the traffic to the main server will be routed
-# by Traefik.
-kind: Service
-apiVersion: v1
-metadata:
-  namespace: gtw-che
-  name: che
-spec:
-  selector:
-    app: che
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
+    - name: DNS_TTL
+      value: 5s
