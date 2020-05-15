@@ -10,7 +10,7 @@ function FullGatewayReconfig() {
 # generate config to file haproxy.cfg and cherouter.map
 function genConfig() {
   BACKENDS=""
-  rm -f "${HAPROXY_ROUTER_MAP}"
+  rm -f "${HAPROXY_ROUTER_MAP}" && touch "${HAPROXY_ROUTER_MAP}"
 
   while IFS=, read -r URL_PATH SERVICE; do
     BACKENDS="${BACKENDS}
