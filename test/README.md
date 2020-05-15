@@ -12,7 +12,7 @@
     - `<gateway>` - folder name of gateway implementation (exapmle: `haproxy-scripted`, `nginx-custom-image`, ...). Can be set with `GATEWAY` env variable.
     - `<testcase>` - number of test case (example: `0`, `1`, ...). Can be set with `TESTCASE` env variable.
   - You should run all scripts with same `gateway` and `testcase`. (*Prepare* for one testcase and *run* for another will lead to unpredictable outcome.)
-  - see `[<che-gateway-poc>/test/env.sh](env.sh)` for global variables that are used across the scripts. E.g. `HOST` is hostname of the main Route and is important to be set correctly.
+  - see [`<che-gateway-poc>/test/env.sh`](env.sh) for global variables that are used across the scripts. E.g. `HOST` is hostname of the main Route and is important to be set correctly.
 
   1. run `./01_prepare.sh`
   1. run `./02_run.sh`
