@@ -42,7 +42,7 @@ function parseArgs() {
     exit 1
   fi
 
-  TESTCASE_DIR="${GATEWAY_DIR}/tc_${TESTCASE}"
+  TESTCASE_DIR="${TESTCASES_DIR}/tc_${TESTCASE}"
   if [ ! -d "${TESTCASE_DIR}" ]; then
     echo "invalid TESTCASE '${TESTCASE}'"
     exit 1
