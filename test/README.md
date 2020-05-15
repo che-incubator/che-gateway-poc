@@ -64,16 +64,17 @@ TBD
 ### Implementation
   - Every gateway implementation must have:
     - folder at root of the repo. Folder name is then referenced with `GATEWAY` variable.
-    - file `env.sh`
-    - folder `functions` with `gateway.sh` and `prepare.sh`
+    - files `env.sh`, `functions/gateway.sh` and `functions/prepare.sh`
 
 #### `env.sh`
-Variables needed by gateway implementation, like specific config files.
+Variables needed by gateway implementation (e.g. gateway specific config files). Example: [`haproxy-scripted/env.sh`](../haproxy-scripted/env.sh)
 
 #### `functions/prepare.sh`
 **Must** implement `PrepareGatewayInfra`.
 
 This functions should prepare gateway pod with label `app: che-gateway` and listening on port `8080` and with initial configuration (route everything to `che:80`). Service and Route are already prepared.
+
+Example: [`haproxy-scripted/functions/prepare.sh`](../haproxy-scripted/functions/prepare.sh)
 
 #### `functions/gateway.sh`
 **Must** implement `FullGatewayReconfig` function. This function should read `${WORKSPACES_DB}` file, and reconfigure gateway with it's values.
@@ -84,3 +85,5 @@ request_path,target_service_dnsname
 ```
 
 Gateway should be configured so `/<request_path>` will be directed into `<target_service_dnsname>` AND path-rewrite will remove the `<request_path>` from request path.
+
+Example: [`haproxy-scripted/functions/gateway.sh`](../haproxy-scripted/functions/gateway.sh)
