@@ -23,10 +23,8 @@ spec:
       value: "nginx: master.*"
     - name: CM_PROC_SIGNAL
       value: SIGHUP
-    - name: CM_LOG
-      value: info,cm_bump=trace
     - name: DNS_TTL
-      value: 5s
+      value: 1h
     volumeMounts:
     - name: nginx-conf
       mountPath: /etc/nginx/nginx.conf

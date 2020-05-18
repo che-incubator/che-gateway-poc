@@ -68,5 +68,3 @@ data:
       file:
         directory: "/che-exposures"
         watch: true
-    log:
-      level: DEBUG
