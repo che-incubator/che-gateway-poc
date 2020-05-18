@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# GATEWAY and TESTCASE variables are taken with priority
+# script arguments > env variables > defaults
 readonly GATEWAY=${1:-${GATEWAY:-haproxy-scripted}}
 readonly TESTCASE=${2:-${TESTCASE:-0}}
 
@@ -11,7 +13,8 @@ echo "username '${USER}' will be used as prefix for namespaces"
 
 readonly POC_NAMESPACE="${USER}-singlehostpoc"
 readonly HOST="${POC_NAMESPACE}.apps-crc.testing"
-#HOST="${POC_NAMESPACE}.apps.che-dev.x6e0.p1.openshiftapps.com"
+#readonly HOST="${POC_NAMESPACE}.apps.che-dev.x6e0.p1.openshiftapps.com"
+readonly HOST_IP="$( getent hosts ${HOST} | head -n 1 | awk '{ print $1 }' )"
 readonly YAMLS_DIR="$( dirname "${0}" )/yamls"
 
 readonly BASE_DIR="$( realpath "$( dirname "${0}" )/.." )"
@@ -22,11 +25,10 @@ readonly WORKSPACES_DB="${WORKDIR}/workspaces.db"
 readonly URLS_CSV="${WORKDIR}/urls.csv"
 readonly WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prep
 readonly JMETER_TEST_FILE=${WORKDIR}/test.jmx
+readonly TEST_PARAMS_FILE=${WORKDIR}/params.csv
 
 #. "$( dirname "${0}" )/functions/cleanup.sh"
 . "$( dirname "${0}" )/functions/prepare.sh"
 . "$( dirname "${0}" )/functions/workspace.sh"
 parseArgs "$@"
 importTestFunctions
-
-readonly REPORT_DIR="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( date +%s )"

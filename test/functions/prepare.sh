@@ -6,6 +6,9 @@ function prepareWorkdir() {
   echo "name,host,path" > ${URLS_CSV}
   touch "${WORKSPACES_DB}"
   cp "${TESTCASES_DIR}/tc_${TESTCASE}/test.jmx" ${JMETER_TEST_FILE}
+  if [ -f "${TESTCASES_DIR}/tc_${TESTCASE}/params.csv" ]; then
+    cp "${TESTCASES_DIR}/tc_${TESTCASE}/params.csv" ${TEST_PARAMS_FILE}
+  fi
 }
 
 function prepareBaseInfra() {

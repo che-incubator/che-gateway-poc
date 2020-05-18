@@ -11,6 +11,13 @@ spec:
     image: containous/whoami:v1.5.0
     command: ["/whoami"]
     args: ["--port", "8888"]
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "64Mi"
+        cpu: "100m"
     env:
     - name: WHOAMI_NAME
       value: {{NAME}}
