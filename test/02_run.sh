@@ -8,7 +8,7 @@ set -e
 mkdir -p ${REPORT_DIR}
 cp "${TESTCASES_DIR}/tc_${TESTCASE}/test.jmx" ${REPORT_DIR}/test.xml
 
-HOST_IP="$( getent hosts ${HOST} | awk '{ print $1 }' )"
+HOST_IP="$( getent hosts ${HOST} | head -n 1 | awk '{ print $1 }' )"
 docker run --rm \
 -v ${REPORT_DIR}:${REPORT_DIR}:Z \
 -v ${WORKDIR}:${WORKDIR}:Z \
