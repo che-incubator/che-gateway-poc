@@ -16,25 +16,25 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="duration" elementType="Argument">
             <stringProp name="Argument.name">duration</stringProp>
-            <stringProp name="Argument.value">60</stringProp>
+            <stringProp name="Argument.value">30</stringProp>
             <stringProp name="Argument.desc">how long we should run  [s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspaces_create" elementType="Argument">
             <stringProp name="Argument.name">workspaces_create</stringProp>
-            <stringProp name="Argument.value">2</stringProp>
+            <stringProp name="Argument.value">0</stringProp>
             <stringProp name="Argument.desc">number of workspaces</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspace_create_delay" elementType="Argument">
             <stringProp name="Argument.name">workspace_create_delay</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
+            <stringProp name="Argument.value">0</stringProp>
             <stringProp name="Argument.desc">delay between creation of a new workspace [s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspace_initial_delay" elementType="Argument">
             <stringProp name="Argument.name">workspace_initial_delay</stringProp>
-            <stringProp name="Argument.value">15</stringProp>
+            <stringProp name="Argument.value">0</stringProp>
             <stringProp name="Argument.desc">[s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
@@ -46,7 +46,7 @@
           </elementProp>
           <elementProp name="request_threads" elementType="Argument">
             <stringProp name="Argument.name">request_threads</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
+            <stringProp name="Argument.value">1</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -128,6 +128,10 @@
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">8</intProp>
           </ResponseAssertion>
+          <hashTree/>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+            <stringProp name="DurationAssertion.duration">1000</stringProp>
+          </DurationAssertion>
           <hashTree/>
         </hashTree>
         <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">

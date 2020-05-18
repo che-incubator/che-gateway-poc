@@ -4,6 +4,8 @@ set -e
 
 . "$( dirname "${0}" )/env.sh"
 
+set -x
+
 function run() {
   # prepare report directory
   REPORT_DIR="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( date +%s )"
@@ -17,7 +19,9 @@ function run() {
   --add-host ${HOST}:${HOST_IP} \
   justb4/jmeter:5.1.1 \
   -n -Jjmeter.reportgenerator.overall_granularity=1000 -e \
-  -t ${JMETER_TEST_FILE} -l ${REPORT_DIR}/test.log -j ${REPORT_DIR}/jmeter.log -o ${REPORT_DIR}/dashboard ${@}
+  -t ${JMETER_TEST_FILE} -l ${REPORT_DIR}/test.log -j ${REPORT_DIR}/jmeter.log -o ${REPORT_DIR}/dashboard "${@}"
+
+  cat ${REPORT_DIR}/dashboard/statistics.json
 }
 
 # if there is params.csv in the testcase, read this file and run in the loop
@@ -29,7 +33,8 @@ if [ -f ${TEST_PARAMS_FILE} ]; then
     "-Jrequest_threads=${REQUEST_THREADS}" \
     "-Jworkspaces_create=${WORKSPACES_CREATE}" \
     "-Jworkspace_delay=${WORKSPACE_DELAY}" \
-    "-Jworkspace_initial_delay=${WORKSPACE_INITIAL_DELAY}"
+    "-Jworkspace_initial_delay=${WORKSPACE_INITIAL_DELAY}" \
+    "-Jjmeter.reportgenerator.report_title=loop_delay=${LOOP_DELAY};request_threads=${REQUEST_THREADS};workspaces_create=${WORKSPACES_CREATE};workspace_delay=${WORKSPACE_DELAY};workspace_initial_delay=${WORKSPACE_INITIAL_DELAY}"
   done
 else
   run
