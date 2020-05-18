@@ -12,7 +12,8 @@ function prepareWorkdir() {
 }
 
 function prepareBaseInfra() {
-  oc new-project ${POC_NAMESPACE}
+  # the projects may linger on from previous runs, so let's wait until OpenShift gets its act together..
+  until oc new-project ${POC_NAMESPACE}; do echo "Retrying..."; sleep 1; done
   oc apply -f ${YAMLS_DIR}/infra.yaml -n ${POC_NAMESPACE}
   sed "s/{{NAME}}/che/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
   sed "s/{{HOST}}/${HOST}/g" ${YAMLS_DIR}/openshift.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
