@@ -12,8 +12,8 @@ fi
 echo "username '${USER}' will be used as prefix for namespaces"
 
 readonly POC_NAMESPACE="${USER}-singlehostpoc"
-readonly HOST="${POC_NAMESPACE}.apps-crc.testing"
-#readonly HOST="${POC_NAMESPACE}.apps.che-dev.x6e0.p1.openshiftapps.com"
+#readonly HOST="${POC_NAMESPACE}.apps-crc.testing"
+readonly HOST="${POC_NAMESPACE}.apps.che-dev.x6e0.p1.openshiftapps.com"
 readonly HOST_IP="$( getent hosts ${HOST} | head -n 1 | awk '{ print $1 }' )"
 readonly YAMLS_DIR="$( dirname "${0}" )/yamls"
 
@@ -26,6 +26,7 @@ readonly URLS_CSV="${WORKDIR}/urls.csv"
 readonly WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prep
 readonly JMETER_TEST_FILE=${WORKDIR}/test.jmx
 readonly TEST_PARAMS_FILE=${WORKDIR}/params.csv
+readonly TEST_STATS_FILE=${WORKDIR}/stats.csv
 
 #. "$( dirname "${0}" )/functions/cleanup.sh"
 . "$( dirname "${0}" )/functions/prepare.sh"

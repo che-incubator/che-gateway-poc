@@ -20,8 +20,11 @@ function run() {
   -t ${JMETER_TEST_FILE} -l ${REPORT_DIR}/test.log -j ${REPORT_DIR}/jmeter.log -o ${REPORT_DIR}/dashboard "${@}"
 
   cat ${REPORT_DIR}/dashboard/statistics.json
+  echo "${DURATION},${LOOP_DELAY},${REQUEST_THREADS},${WORKSPACES_CREATE},${WORKSPACE_DELAY},${WORKSPACE_INITIAL_DELAY},$( cat ${REPORT_DIR}/dashboard/statistics.json | jq -r '.Total | [.sampleCount, .errorCount, .errorPct, .meanResTime, .minResTime, .maxResTime, .pct1ResTime, .pct2ResTime, .pct3ResTime, .throughput, .receivedKBytesPerSec, .sentKBytesPerSec] | join(",")' )" >> ${TEST_STATS_FILE}
 }
 
+
+echo "duration,loop_delay,request_threads,workspaces_create,workspace_delay,workspace_initial_delay,sampleCount,errorCount,errorPct,meanResTime,minResTime,maxResTime,pct90ResTime,pct95ResTime,pct99ResTime,throughput,receivedKBytesPerSec,sentKBytesPerSec" > ${TEST_STATS_FILE}
 # if there is params.csv in the testcase, read this file and run in the loop
 # otherwise run once with default parameters from 'test.jmx' file
 if [ -f ${TEST_PARAMS_FILE} ]; then
