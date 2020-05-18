@@ -4,8 +4,6 @@ set -e
 
 . "$( dirname "${0}" )/env.sh"
 
-set -x
-
 function run() {
   # prepare report directory
   REPORT_DIR="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( date +%s )"
