@@ -8,7 +8,7 @@ spec:
   serviceAccountName: gateway-config
   containers:
   - name: gateway 
-    image: quay.io/lkrejci/cm-bump-nginx-prototype 
+    image: lkrejci/cm-bump-nginx-prototype 
     imagePullPolicy: Always
     env:
     - name: CM_TLS_VERIFY

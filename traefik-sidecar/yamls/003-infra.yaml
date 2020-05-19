@@ -15,14 +15,14 @@ spec:
   serviceAccountName: gateway-config
   containers:
   - name: traefik
-    image: quay.io/lkrejci/traefik-openshift:2.2.0
+    image: lkrejci/traefik-openshift:2.2.0
     volumeMounts:
     - name: config
       mountPath: /etc/traefik
     - name: exposures
       mountPath: "/che-exposures"
   - name: config-map-sync
-    image: quay.io/lkrejci/cm-bump:latest
+    image: lkrejci/cm-bump:latest
     env:
     - name: CM_TLS_VERIFY
       value: "false"
