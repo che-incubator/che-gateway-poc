@@ -13,7 +13,7 @@ function FullGatewayReconfig() {
           data:
             ws-$NAME: |
               location /${WS_PATH} {
-                proxy_pass http://${SERVICE};
+                proxy_pass http://${SERVICE}/;
                 proxy_cookie_path \$uri /${WS_PATH}\$uri;
                 proxy_http_version 1.1;
                 proxy_set_header Upgrade \$http_upgrade;
