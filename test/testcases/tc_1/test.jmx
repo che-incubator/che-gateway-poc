@@ -16,20 +16,26 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="duration" elementType="Argument">
             <stringProp name="Argument.name">duration</stringProp>
-            <stringProp name="Argument.value">200</stringProp>
+            <stringProp name="Argument.value">600</stringProp>
             <stringProp name="Argument.desc">how long we should run  [s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="workspaces" elementType="Argument">
-            <stringProp name="Argument.name">workspaces</stringProp>
+          <elementProp name="workspaces_create" elementType="Argument">
+            <stringProp name="Argument.name">workspaces_create</stringProp>
             <stringProp name="Argument.value">25</stringProp>
             <stringProp name="Argument.desc">number of workspaces</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="workspace_create_delay" elementType="Argument">
             <stringProp name="Argument.name">workspace_create_delay</stringProp>
-            <stringProp name="Argument.value">5</stringProp>
+            <stringProp name="Argument.value">10</stringProp>
             <stringProp name="Argument.desc">delay between creation of a new workspace [s]</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="workspace_initial_delay" elementType="Argument">
+            <stringProp name="Argument.name">workspace_initial_delay</stringProp>
+            <stringProp name="Argument.value">30</stringProp>
+            <stringProp name="Argument.desc">[s]</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="loop_delay" elementType="Argument">
@@ -40,13 +46,12 @@
           </elementProp>
           <elementProp name="request_threads" elementType="Argument">
             <stringProp name="Argument.name">request_threads</stringProp>
-            <stringProp name="Argument.value">10</stringProp>
+            <stringProp name="Argument.value">50</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="workspace_initial_delay" elementType="Argument">
-            <stringProp name="Argument.name">workspace_initial_delay</stringProp>
-            <stringProp name="Argument.value">60</stringProp>
-            <stringProp name="Argument.desc">[s]</stringProp>
+          <elementProp name="throughput_target" elementType="Argument">
+            <stringProp name="Argument.name">throughput_target</stringProp>
+            <stringProp name="Argument.value">6000</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -58,16 +63,16 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${request_threads}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(request_threads,${request_threads})}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${duration}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(duration,${duration})}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-          <stringProp name="filename">/home/mvala/dev/haproxy-che-singlehost-poc/testcase_1/workdir/urls.csv</stringProp>
+          <stringProp name="filename">urls.csv</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="variableNames"></stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -129,10 +134,19 @@
             <intProp name="Assertion.test_type">8</intProp>
           </ResponseAssertion>
           <hashTree/>
+          <DurationAssertion guiclass="DurationAssertionGui" testclass="DurationAssertion" testname="Duration Assertion" enabled="true">
+            <stringProp name="DurationAssertion.duration">1000</stringProp>
+          </DurationAssertion>
+          <hashTree/>
         </hashTree>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
-          <stringProp name="ConstantTimer.delay">${loop_delay}</stringProp>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="false">
+          <stringProp name="ConstantTimer.delay">${__P(loop_delay,${loop_delay})}</stringProp>
         </ConstantTimer>
+        <hashTree/>
+        <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
+          <stringProp name="throughput">${__P(throughput_target,${throughput_target})}</stringProp>
+          <intProp name="calcMode">4</intProp>
+        </ConstantThroughputTimer>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -250,13 +264,13 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${workspaces}</stringProp>
+          <stringProp name="LoopController.loops">${__P(workspaces_create,${workspaces_create})}</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">${duration}</stringProp>
-        <stringProp name="ThreadGroup.delay">${workspace_initial_delay}</stringProp>
+        <stringProp name="ThreadGroup.duration">${__P(duration,${duration})}</stringProp>
+        <stringProp name="ThreadGroup.delay">${__P(workspace_initial_delay,${workspace_initial_delay})}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
@@ -268,7 +282,7 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="Argument">
                 <stringProp name="Argument.name"></stringProp>
-                <stringProp name="Argument.value">02_addWorkspace.sh</stringProp>
+                <stringProp name="Argument.value">03_addWorkspace.sh</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -276,7 +290,7 @@
           <elementProp name="SystemSampler.environment" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="SystemSampler.directory">/home/mvala/dev/haproxy-che-singlehost-poc/testcase_1</stringProp>
+          <stringProp name="SystemSampler.directory">../</stringProp>
         </SystemSampler>
         <hashTree>
           <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Ignore this in report" enabled="true">
@@ -290,7 +304,7 @@
         </hashTree>
       </hashTree>
       <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
-        <stringProp name="ConstantTimer.delay">${workspace_create_delay}000</stringProp>
+        <stringProp name="ConstantTimer.delay">${__P(workspace_create_delay,${workspace_create_delay})}000</stringProp>
       </ConstantTimer>
       <hashTree/>
     </hashTree>
