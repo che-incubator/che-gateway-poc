@@ -43,9 +43,10 @@ function createPreparedWorkspacesInfra() {
     echo "about to create ${WS} in ${NS}"
     #TODO: let caller prepare the namespace so this is not called gazzilion times
     #if namespace does not exist, create new namespace and che pod there
-    if ! oc get projects | egrep "${NS} "; then
+    if ! cat ${OS_PROJECTS} | egrep "${NS} "; then
       oc new-project "${NS}"
       sed "s/{{NAME}}/${NS}/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${NS} -f -
+      echo "${NS}" >> ${OS_PROJECTS}
     fi
 
     echo "

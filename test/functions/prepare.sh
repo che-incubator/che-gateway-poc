@@ -18,6 +18,9 @@ function prepareBaseInfra() {
   sed "s/{{NAME}}/che/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
   sed "s/{{HOST}}/${HOST}/g" ${YAMLS_DIR}/openshift.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
 
+  # write all current project into the file so we don't have to re-request it later
+  oc get projects > ${OS_PROJECTS}
+
   # add Che to tested URLs
   echo "che,${HOST}," >> ${URLS_CSV}
 

@@ -28,6 +28,7 @@ readonly WORKSPACES_PREPARED=${WORKDIR}/workspaces_prepared
 readonly JMETER_TEST_FILE=${WORKDIR}/test.jmx
 readonly TEST_PARAMS_FILE=${WORKDIR}/params.csv
 readonly TEST_STATS_FILE=${WORKDIR}/stats.csv
+readonly OS_PROJECTS=${WORKDIR}/os_projects
 
 #. "$( dirname "${0}" )/functions/cleanup.sh"
 . "$( dirname "${0}" )/functions/prepare.sh"
