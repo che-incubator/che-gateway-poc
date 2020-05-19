@@ -14,22 +14,47 @@ function prepareNewWorkspace() {
 
   # when no namespace received, use workspace name as a part of namespace name
   if [ -z ${2} ]; then
-    NS="${POC_NAMESPACE}"
+    NS="${POC_NAMESPACE}-${1}"
   else
     NS="${2}"
   fi
-  echo "creating ${WS} in ${NS}"
+  echo "preparing ${WS} in ${NS}"
+  echo "${WS} ${NS}" >> ${WORKSPACES_PREPARED}
+}
 
-  #TODO: let caller prepare the namespace so this is not called gazzilion times
-  # if namespace does not exist, create new namespace and che pod there
-  if ! oc get projects | egrep "${NS} "; then
-    oc new-project "${NS}"
-    sed "s/{{NAME}}/${NS}/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${NS} -f -
+# $1 - workspace
+function createWorkspace() {
+  WS=${1}
+  if [ -z ${WS} ]; then
+    echo "you must <workspace>"
+    exit 1
   fi
 
-  echo "
+  prepareNewWorkspace ${WS}
+  createPreparedWorkspacesInfra 1
+
+  writeTestAndFlushPreparedWorkspaces 1
+}
+
+# $1 - number of workspaces that should be created
+function createPreparedWorkspacesInfra() {
+  WORKSPACE_COUNT=${1:-9999}
+  head -n ${WORKSPACE_COUNT} ${WORKSPACES_PREPARED} | while read -r WS NS; do
+    echo "about to create ${WS} in ${NS}"
+    #TODO: let caller prepare the namespace so this is not called gazzilion times
+    #if namespace does not exist, create new namespace and che pod there
+    if ! oc get projects | egrep "${NS} "; then
+      oc new-project "${NS}"
+      sed "s/{{NAME}}/${NS}/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${NS} -f -
+    fi
+
+    echo "
 ---" >> ${WORKSPACES_PREPARE_YAML}
-  sed "s/{{WORKSPACE}}/${WS}/g; s/{{NAMESPACE}}/${NS}/g" ${YAMLS_DIR}/workspaceService.yaml_template >> ${WORKSPACES_PREPARE_YAML}
+    sed "s/{{WORKSPACE}}/${WS}/g; s/{{NAMESPACE}}/${NS}/g" ${YAMLS_DIR}/workspaceService.yaml_template >> ${WORKSPACES_PREPARE_YAML}
+  done
+
+  oc apply -f ${WORKSPACES_PREPARE_YAML}
+  rm -f ${WORKSPACES_PREPARE_YAML}
 }
 
 # $1 - namespace (optional)
@@ -43,57 +68,31 @@ function createRandomWorkspace() {
   createWorkspace ${WS} ${NS}
 }
 
-# $1 - workspace
-# $2 - namespace (optional)
-function createWorkspace() {
-  WS=${1}
-  # when no namespace received, use workspace name as a part of namespace name
-  if [ -z ${2} ]; then
-    NS="${POC_NAMESPACE}-${WS}"
-  else
-    NS=${1}
-  fi
-  echo "creating ${WS} in ${NS}"
+function markPreparedWorkspacesToTest() {
+  WORKSPACE_COUNT=${1:-9999}
+  head -n ${WORKSPACE_COUNT} ${WORKSPACES_PREPARED} | while read -r WS NS; do
+    echo "${NS},${HOST},/${WS}-${NS}" >> ${URLS_CSV}
+  done
+}
 
-  WS="ws-${WS_SUFFIX}"
-  URL_PATH="${NS}-${WS}"
-  prepareNewWorkspace ${WS} ${NS}
-  markWorkspaceToTest ${NS} ${URL_PATH}
-  writeWorkspaceToDb ${URL_PATH} "${WS}.${NS}.svc.cluster.local"
-  createPreparedWorkspaces
+function writePreparedWorkspacesToDb() {
+  WORKSPACE_COUNT=${1:-9999}
+  head -n ${WORKSPACE_COUNT} ${WORKSPACES_PREPARED} | while read -r WS NS; do
+    echo "${WS}-${NS},${WS}.${NS}.svc.cluster.local" >> ${WORKSPACES_DB}
+  done
+}
+
+function flushPreparedWorkspaces() {
+  WORKSPACE_COUNT=${1:-9999}
+  sed -i 1,${WORKSPACE_COUNT}d ${WORKSPACES_PREPARED}
+}
+
+function writeTestAndFlushPreparedWorkspaces() {
+  WORKSPACE_COUNT=${1:-9999}
+  writePreparedWorkspacesToDb ${WORKSPACE_COUNT}
   FullGatewayReconfig
-}
-
-function createPreparedWorkspaces() {
-  oc apply -f ${WORKSPACES_PREPARE_YAML}
-  rm -f ${WORKSPACES_PREPARE_YAML}
-}
-
-# $1 - name that is passed to che pod
-# $2 - path
-function markWorkspaceToTest() {
-  NAME=${1}
-  URL_PATH=${2}
-  if [ -z ${NAME} ] || [ -z ${URL_PATH} ]; then
-    echo "have to pass '<name>' and '<path>'"
-    exit 1
-  fi
-
-  echo "${NAME},${HOST},/${URL_PATH}" >> ${URLS_CSV}
-}
-
-# $1 - path
-# $2 - service name (e.g. cheworkspace-ws1.ws1.svc.cluster.local)
-function writeWorkspaceToDb() {
-  URL_PATH=${1}
-  SERVICE_NAME=${2}
-
-  if [ -z ${URL_PATH} ] || [ -z ${SERVICE_NAME} ]; then
-    echo "have to pass '<path>' and '<service>'"
-    exit 1
-  fi
-
-  echo "${URL_PATH},${SERVICE_NAME}" >> ${WORKSPACES_DB}
+  markPreparedWorkspacesToTest ${WORKSPACE_COUNT}
+  flushPreparedWorkspaces ${WORKSPACE_COUNT}
 }
 
 function printWorkspaces() {
