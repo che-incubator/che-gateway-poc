@@ -56,22 +56,6 @@ function reconfigRouter() {
   oc patch pod ${GATEWAY_POD} -n ${POC_NAMESPACE} --patch "{\"metadata\": {\"annotations\": {\"random\": \"${RANDOM}\"} } }"
 }
 
-function findHaproxyPid() {
-  PROCESSES=$( oc exec ${GATEWAY_POD} -c haproxy -n ${POC_NAMESPACE} -- "ls" "/proc" )
-  for P in ${PROCESSES}; do
-    if [[ "${P}" =~ ^[0-9]+$ ]]; then
-      PID_STATUS=$( oc exec ${GATEWAY_POD} -c haproxy -n ${POC_NAMESPACE} -- "cat" "/proc/${P}/status" )
-      #echo "${PID_STATUS}"
-      if echo "${PID_STATUS}" | grep 'haproxy' > /dev/null && echo "${PID_STATUS}" | grep 'PPid' | grep 0 > /dev/null; then
-        echo ${P} > ${HAPROXY_PID}
-        return
-      fi
-    fi
-  done
-  echo "no haproxy process found. exit 1"
-  exit 1
-}
-
 function kickoffHaproxy() {
   GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
   if ! oc wait --for=condition=ready --timeout=300s pod ${GATEWAY_POD} -n ${POC_NAMESPACE}; then
@@ -80,14 +64,7 @@ function kickoffHaproxy() {
   fi
 
   ## restart haproxy process
-  # list processes
-  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
-  if [ ! -f ${HAPROXY_PID} ]; then
-    findHaproxyPid
-  fi
-  #set -x
-  oc exec ${GATEWAY_POD} -n ${POC_NAMESPACE} -c haproxy -- "/bin/sh" "-c" "kill -HUP $( cat ${HAPROXY_PID} )"
-  #set +x
+  oc exec ${GATEWAY_POD} -n ${POC_NAMESPACE} -c haproxy -- "/bin/sh" "-c" "kill -HUP 1"
 }
 
 function fullReconfig() {
