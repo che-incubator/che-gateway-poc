@@ -3,4 +3,4 @@
 set -e
 
 sleep 30
-sh -x addPreparedWorkspace.sh
+sh -x 66_addPreparedWorkspace.sh
