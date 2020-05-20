@@ -40,7 +40,18 @@ All common logic of testcases is at `<che-gateway-poc>/test/testcases/tc_<testca
 TBD
 
 #### Testcase 2 (`tc_2`)
-TBD
+##### params
+  - duration: 60s
+  - assert: 1500ms latency, response code 200, response payload '1'
+  - threads: 25
+  - target throughput: 3000op/min
+
+##### scenario
+  - repeat 5x (N=25)
+    - prepare 30 workspaces
+    - configure gateway for `N` workspaces and load them
+    - after 30s add 1 prepared workspace to gateway
+    - `N++`
 
 #### Testcase 3 (`tc_3`)
 TBD
