@@ -11,13 +11,24 @@ function run() {
   cp ${JMETER_TEST_FILE} ${REPORT_DIR}/test.xml
   echo "${@}" >> ${REPORT_DIR}/params.txt
 
+  # run testcase's actions
+  if [ -f ${TESTCASE_DIR}/actions.sh ]; then
+    sh -x ${TESTCASE_DIR}/actions.sh > ${REPORT_DIR}/actions.log 2>&1 &
+    ADD_WORKSPACES_PID=$!
+  fi
+
   docker run --rm \
   -v ${REPORT_DIR}:${REPORT_DIR}:Z \
   -v ${BASE_DIR}:${BASE_DIR}:Z \
+  -e USER=${USER} \
   --add-host ${HOST}:${HOST_IP} \
   justb4/jmeter:5.1.1 \
   -n -Jjmeter.reportgenerator.overall_granularity=1000 -e \
   -t ${JMETER_TEST_FILE} -l ${REPORT_DIR}/test.log -j ${REPORT_DIR}/jmeter.log -o ${REPORT_DIR}/dashboard "${@}"
+
+  if [ ! -z ${ADD_WORKSPACES_PID} ]; then
+    kill ${ADD_WORKSPACES_PID}
+  fi
 
   cat ${REPORT_DIR}/dashboard/statistics.json
   if [ -f ${TEST_PARAMS_FILE} ]; then
