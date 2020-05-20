@@ -6,4 +6,4 @@ set -e
 
 writeTestAndFlushPreparedWorkspaces 1
 
-printWorkspaces
+#printWorkspaces
