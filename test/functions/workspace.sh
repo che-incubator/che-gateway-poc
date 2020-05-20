@@ -46,7 +46,7 @@ function createPreparedWorkspacesInfra() {
     if ! cat ${OS_PROJECTS} | egrep "${NS} "; then
       oc new-project "${NS}"
       sed "s/{{NAME}}/${NS}/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${NS} -f -
-      echo "${NS}" >> ${OS_PROJECTS}
+      echo "${NS} Active" >> ${OS_PROJECTS}
     fi
 
     echo "

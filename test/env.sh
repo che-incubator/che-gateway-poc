@@ -12,6 +12,7 @@ fi
 echo "username '${USER}' will be used as prefix for namespaces"
 
 readonly POC_NAMESPACE="${USER}-singlehostpoc"
+readonly POC_WSNAMESPACE="${POC_NAMESPACE}-ws"
 #readonly HOST="${POC_NAMESPACE}.apps-crc.testing"
 readonly HOST="${POC_NAMESPACE}.apps.che-dev.x6e0.p1.openshiftapps.com"
 readonly HOST_IP="$( getent hosts ${HOST} | head -n 1 | awk '{ print $1 }' )"

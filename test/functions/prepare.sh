@@ -18,6 +18,10 @@ function prepareBaseInfra() {
   sed "s/{{NAME}}/che/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
   sed "s/{{HOST}}/${HOST}/g" ${YAMLS_DIR}/openshift.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
 
+  # project for workspaces
+  #until oc new-project ${POC_WSNAMESPACE}; do echo "Retrying..."; sleep 1; done
+  #sed "s/{{NAME}}/${POC_WSNAMESPACE}/g;s/64Mi/1024Mi/g;s/100m/2/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${POC_WSNAMESPACE} -f -
+
   # write all current project into the file so we don't have to re-request it later
   oc get projects > ${OS_PROJECTS}
 
