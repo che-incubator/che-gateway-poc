@@ -1,0 +1,8 @@
+== HAProxy POC using a custom image
+
+This POC is based on a custom docker image combining haproxy with our `cm-bump` tool
+to automatically apply labeled config maps onto the filesystem and send a signal
+to some other process.
+
+The image is built from this: https://github.com/metlos/cm-bump/tree/master/examples/custom-image/haproxy
+

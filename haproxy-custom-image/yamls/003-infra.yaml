@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: che-gateway
+  labels:
+    app: che-gateway
+spec:
+  serviceAccountName: gateway-config
+  initContainers:
+  - name: setup-empty-cfg
+    image: alpine
+    command: ["sh", "-c", "touch /tmp/haproxy-config/cherouter.map"]
+    volumeMounts:
+    - name: dynamic-config
+      mountPath: /tmp/haproxy-config
+  containers:
+  - name: haproxy
+    image: lkrejci/cm-bump-haproxy-prototype
+    imagePullPolicy: Always
+    command: ["/entrypoint.sh"]
+    args: ["-W", "-f", "/etc/haproxy"]
+    ports:
+    - containerPort: 8080
+    volumeMounts:
+    - name: main-config
+      mountPath: /etc/haproxy
+    - name: dynamic-config
+      mountPath: /tmp/haproxy-config
+    env:
+    - name: CM_TLS_VERIFY
+      value: "false"
+    - name: CM_LABELS
+      value: "che-config-role==gateway"
+    - name: CM_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    - name: CM_PROC_SIGNAL
+      value: SIGHUP
+    - name: DNS_TTL
+      value: 1h
+    - name: CM_LOG
+      value: info,cm_bump=trace
+  volumes:
+  - name: main-config
+    configMap:
+      name: haproxy-config-main
+  - name: dynamic-config
+    emptyDir: {}
