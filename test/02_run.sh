@@ -26,7 +26,7 @@ function run() {
   -n -Jjmeter.reportgenerator.overall_granularity=1000 -e \
   -t ${JMETER_TEST_FILE} -l ${REPORT_DIR}/test.log -j ${REPORT_DIR}/jmeter.log -o ${REPORT_DIR}/dashboard "${@}"
 
-  if [ ! -z ${ADD_WORKSPACES_PID} ]; then
+  if [ ! -z ${ADD_WORKSPACES_PID} ] && kill -0 ${ADD_WORKSPACES_PID} ; then
     kill ${ADD_WORKSPACES_PID}
   fi
 
@@ -45,6 +45,7 @@ if [ -f ${TEST_PARAMS_FILE} ]; then
 
   # read rest of file line by line
   sed 1d ${TEST_PARAMS_FILE} | while read -r LINE; do
+    if [ -z ${LINE} ]; then continue; fi
     JMETER_ARGS=""
     JMETER_REPORT_TITLE=""
     # split line by ','
