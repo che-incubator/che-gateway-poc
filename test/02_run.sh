@@ -22,7 +22,7 @@ function run() {
   -v ${BASE_DIR}:${BASE_DIR}:Z \
   -e USER=${USER} \
   --add-host ${HOST}:${HOST_IP} \
-  justb4/jmeter:5.1.1 \
+  docker.io/justb4/jmeter:5.1.1 \
   -n -Jjmeter.reportgenerator.overall_granularity=1000 -e \
   -t ${JMETER_TEST_FILE} -l ${REPORT_DIR}/test.log -j ${REPORT_DIR}/jmeter.log -o ${REPORT_DIR}/dashboard "${@}"
 
@@ -32,7 +32,7 @@ function run() {
 
   cat ${REPORT_DIR}/dashboard/statistics.json
   if [ -f ${TEST_PARAMS_FILE} ]; then
-    echo "${GATEWAY},${TESTCASE},$( IFS=","; echo "${LINE[*]}" ),$( cat ${REPORT_DIR}/dashboard/statistics.json | jq -r '.Total | [.sampleCount, .errorCount, .errorPct, .meanResTime, .minResTime, .maxResTime, .pct1ResTime, .pct2ResTime, .pct3ResTime, .throughput, .receivedKBytesPerSec, .sentKBytesPerSec] | join(",")' )" >> ${TEST_STATS_FILE}
+    echo "${GATEWAY},${TESTCASE},$( IFS=","; echo "${LINE[*]}" ),$( cat ${REPORT_DIR}/dashboard/statistics.json | jq -r '.Total | [.sampleCount, .errorCount, .errorPct, .meanResTime, .minResTime, .maxResTime, .pct1ResTime, .pct2ResTime, .pct3ResTime, .throughput, .receivedKBytesPerSec, .sentKBytesPerSec] | map_values(tostring) | join(",")' )" >> ${TEST_STATS_FILE}
   fi
 }
 
