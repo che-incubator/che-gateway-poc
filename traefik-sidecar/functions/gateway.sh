@@ -41,5 +41,5 @@ function AddSingleRoute() {
                                 - \"/${WS_PATH}\"
     "
     echo "${CONFIG_MAP}" | oc apply -n ${POC_NAMESPACE} -f -
-    NAME=$(($NAME + 1))
+    NUMBER_OF_WORKSPACES=$(($NUMBER_OF_WORKSPACES + 1))
 }
