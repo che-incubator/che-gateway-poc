@@ -1,3 +1,4 @@
 #!/bin/sh
 
-# nothing to do here
+CACHED_ROUTER_MAP="${WORKDIR}/cherouter.map"
+NUMBER_OF_WORKSPACES=0
