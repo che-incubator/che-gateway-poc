@@ -22,17 +22,17 @@
           </elementProp>
           <elementProp name="throughput_target" elementType="Argument">
             <stringProp name="Argument.name">throughput_target</stringProp>
-            <stringProp name="Argument.value">3000</stringProp>
+            <stringProp name="Argument.value">20000</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="request_threads" elementType="Argument">
             <stringProp name="Argument.name">request_threads</stringProp>
-            <stringProp name="Argument.value">25</stringProp>
+            <stringProp name="Argument.value">200</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="assert_latency" elementType="Argument">
             <stringProp name="Argument.name">assert_latency</stringProp>
-            <stringProp name="Argument.value">2000</stringProp>
+            <stringProp name="Argument.value">1500</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="loop_delay" elementType="Argument">
@@ -98,7 +98,7 @@
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">${path}/bench</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
