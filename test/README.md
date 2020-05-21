@@ -67,12 +67,15 @@ TBD
   - repeat 5x
     - load for 300s
 
-#### why
+##### why
   - measure base latency of individual gateways
   - detect if any gateway has issue to handle static load
 
 #### Testcase 4 (`tc_4`)
-TBD
+  - same as `tc_3`, only with 100 workspaces
+
+##### why
+  - is performance under same load better/worse with 1 or many routes?
 
 
 ## HOWTO Implement new gateway

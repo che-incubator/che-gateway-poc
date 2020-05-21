@@ -14,7 +14,7 @@ function prepareNewWorkspace() {
 
   # when no namespace received, use workspace name as a part of namespace name
   if [ -z ${2} ]; then
-    NS="${POC_WSNAMESPACE}"
+    NS="${POC_WSNAMESPACE}-${WS}"
   else
     NS="${2}"
   fi
