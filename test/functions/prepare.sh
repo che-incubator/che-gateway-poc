@@ -9,6 +9,7 @@ function prepareWorkdir() {
   if [ -f "${TESTCASES_DIR}/tc_${TESTCASE}/params.csv" ]; then
     cp "${TESTCASES_DIR}/tc_${TESTCASE}/params.csv" ${TEST_PARAMS_FILE}
   fi
+  mkdir -p ${REPORTS_DIR}
 }
 
 function prepareBaseInfra() {
