@@ -3,8 +3,8 @@
 set -e
 
 . "$( dirname "${0}" )/env.sh"
-echo "adding prepared workspace at '$( date )'"
+echo "$( date +%s%N ): adding prepared workspace"
 writeTestAndFlushPreparedWorkspaces 1
-echo "finished adding prepared workspace at '$( date )'"
+echo "$( date +%s%N ): finished adding prepared workspace"
 
 #printWorkspaces

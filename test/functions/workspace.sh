@@ -91,6 +91,9 @@ function flushPreparedWorkspaces() {
 function writeTestAndFlushPreparedWorkspaces() {
   WORKSPACE_COUNT=${1:-9999}
   writePreparedWorkspacesToDb ${WORKSPACE_COUNT}
+  echo "$( date +%s%N ): marking workspace to test ..."
+  markPreparedWorkspacesToTest ${WORKSPACE_COUNT}
+  echo "$( date +%s%N ): start reconfigure the gateway ..."
   if [ ${WORKSPACE_COUNT} == 1 ]; then
     # uncomment when AddSingleRoute is implemented for all gateways
     # AddSingleRoute $( tail -n 1 ${WORKSPACES_DB} | sed 's/,/ /g' )
@@ -98,7 +101,7 @@ function writeTestAndFlushPreparedWorkspaces() {
   else
     FullGatewayReconfig
   fi
-  markPreparedWorkspacesToTest ${WORKSPACE_COUNT}
+  echo "$( date +%s%N ): gateway reconfigure finished ..."
   flushPreparedWorkspaces ${WORKSPACE_COUNT}
 }
 
