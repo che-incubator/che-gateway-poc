@@ -1,3 +1,4 @@
 #!/bin sh
 
-# nothing to do here
+NUMBER_OF_WORKSPACES=0
+

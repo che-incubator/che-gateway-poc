@@ -1,16 +1,26 @@
 #!/bin/sh
 
 function FullGatewayReconfig() {
-    NAME=0
     while IFS=, read -r WS_PATH SERVICE; do
-        CONFIG_MAP="
-          apiVersion: v1
-          kind: ConfigMap
-          metadata:
+        AddSingleRoute ${WS_PATH} ${SERVICE}
+    done < ${WORKSPACES_DB}    
+}
+
+function AddSingleRoute() {
+    WS_PATH=${1}
+    SERVICE=${2}
+
+    N=$(($NUMBER_OF_WORKSPACES + 1))
+    NAME=$(printf "%08d" $N)
+
+    CONFIG_MAP="
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
             name: ws-${NAME}
             labels:
                 che-config-role: gateway
-          data:
+        data:
             ws-${NAME}.yml: |
                 http:
                     routers:
@@ -29,8 +39,7 @@ function FullGatewayReconfig() {
                             stripPrefix:
                                 prefixes:
                                 - \"/${WS_PATH}\"
-        "
-        echo "${CONFIG_MAP}" | oc apply -n ${POC_NAMESPACE} -f -
-        NAME=$(($NAME + 1))
-    done < ${WORKSPACES_DB}    
+    "
+    echo "${CONFIG_MAP}" | oc apply -n ${POC_NAMESPACE} -f -
+    NAME=$(($NAME + 1))
 }
