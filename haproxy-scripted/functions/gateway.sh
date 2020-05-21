@@ -6,9 +6,15 @@ function FullGatewayReconfig() {
   kickoffHaproxy
 }
 
+function AddSingleRoute() {
+  writeNewRoute ${1} ${2}
+  reconfigRouter
+  kickoffHaproxy
+}
+
 # $1 - URL_PATH
 # $2 - SERVICE
-function AddSingleRoute() {
+function writeNewRoute() {
   URL_PATH=${1}
   SERVICE=${2}
 
@@ -22,9 +28,6 @@ backend ${SERVICE}
 
   # write route to haproxy route map config file
   echo "/${URL_PATH} ${SERVICE}" >> ${HAPROXY_ROUTER_MAP}
-
-  reconfigRouter
-  kickoffHaproxy
 }
 
 ## update haproxy configmap
@@ -36,7 +39,7 @@ function genConfig() {
 
   # then add all routes one by one
   while IFS=, read -r URL_PATH SERVICE; do
-    AddSingleRoute ${URL_PATH} ${SERVICE}
+    writeNewRoute ${URL_PATH} ${SERVICE}
   done < ${WORKSPACES_DB}
 }
 
