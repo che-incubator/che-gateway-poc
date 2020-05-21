@@ -91,7 +91,13 @@ function flushPreparedWorkspaces() {
 function writeTestAndFlushPreparedWorkspaces() {
   WORKSPACE_COUNT=${1:-9999}
   writePreparedWorkspacesToDb ${WORKSPACE_COUNT}
-  FullGatewayReconfig
+  if [ ${WORKSPACE_COUNT} == 1 ]; then
+    # uncomment when AddSingleRoute is implemented for all gateways
+    # AddSingleRoute $( tail -n 1 ${WORKSPACES_DB} | sed 's/,/ /g' )
+    FullGatewayReconfig
+  else
+    FullGatewayReconfig
+  fi
   markPreparedWorkspacesToTest ${WORKSPACE_COUNT}
   flushPreparedWorkspaces ${WORKSPACE_COUNT}
 }
