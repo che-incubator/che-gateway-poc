@@ -10,6 +10,7 @@ function AddSingleRoute() {
     WS_PATH=${1}
     SERVICE=${2}
 
+    NUMBER_OF_WORKSPACES=`TraefikGetNumberOfWorkspaces`
     N=$(($NUMBER_OF_WORKSPACES + 1))
     NAME=$(printf "%08d" $N)
 
@@ -42,4 +43,5 @@ function AddSingleRoute() {
     "
     echo "${CONFIG_MAP}" | oc apply -n ${POC_NAMESPACE} -f -
     NUMBER_OF_WORKSPACES=$(($NUMBER_OF_WORKSPACES + 1))
+    TraefikSetNumberOfWorkspaces ${NUMBER_OF_WORKSPACES}
 }

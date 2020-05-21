@@ -28,6 +28,7 @@ function addWorkspace() {
   URL_PATH=${1}
   SERVICE=${2}
 
+  NUMBER_OF_WORKSPACES=`HaproxyGetNumberOfWorkspaces`
   N=$(($NUMBER_OF_WORKSPACES + 1))
   ID=$(printf "%08d" $N)
 
@@ -47,6 +48,7 @@ function addWorkspace() {
   " | oc apply -n ${POC_NAMESPACE} -f -
 
   NUMBER_OF_WORKSPACES=$(($NUMBER_OF_WORKSPACES + 1))
+  HaproxySetNumberOfWorkspaces ${NUMBER_OF_WORKSPACES}
 }
 
 function regenerateCheRouterMap() {
