@@ -21,7 +21,7 @@ spec:
       - name: haproxy
         image: haproxy:2.1
         command: ["haproxy"]
-        args: ["-W", "-f", "/usr/local/etc/haproxy"]
+        args: ["-W", "-f", "/usr/local/etc/haproxy/haproxy.cfg", "-f", "/usr/local/etc/haproxy/backends.cfg"]
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -57,3 +57,5 @@ data:
       cookie SERVERUSED insert indirect nocache
       server server che:80
   cherouter.map: |
+
+  backends.cfg: |

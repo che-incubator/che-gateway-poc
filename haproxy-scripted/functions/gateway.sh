@@ -6,52 +6,45 @@ function FullGatewayReconfig() {
   kickoffHaproxy
 }
 
-## update haproxy configmap
-# generate config to file haproxy.cfg and cherouter.map
-function genConfig() {
-  BACKENDS=""
-  rm -f "${HAPROXY_ROUTER_MAP}" && touch "${HAPROXY_ROUTER_MAP}"
+# $1 - URL_PATH
+# $2 - SERVICE
+function AddSingleRoute() {
+  URL_PATH=${1}
+  SERVICE=${2}
 
-  while IFS=, read -r URL_PATH SERVICE; do
-    BACKENDS="${BACKENDS}
+  # write route to backends config file
+  echo "
 backend ${SERVICE}
   cookie SERVERUSED insert indirect nocache
   http-request set-path %[path,regsub(^/${URL_PATH}/?,/)]
   server ${URL_PATH} ${SERVICE}:80
-  "
-    echo "/${URL_PATH} ${SERVICE}" >> ${HAPROXY_ROUTER_MAP}
+  " >> ${HAPROXY_BACKENDS_CFG}
+
+  # write route to haproxy route map config file
+  echo "/${URL_PATH} ${SERVICE}" >> ${HAPROXY_ROUTER_MAP}
+
+  reconfigRouter
+  kickoffHaproxy
+}
+
+## update haproxy configmap
+# generate config to file haproxy.cfg and cherouter.map
+function genConfig() {
+  # first cleanup backends and route map
+  rm -f "${HAPROXY_ROUTER_MAP}" && touch "${HAPROXY_ROUTER_MAP}"
+  rm -f "${HAPROXY_BACKENDS_CFG}" && touch "${HAPROXY_BACKENDS_CFG}"
+
+  # then add all routes one by one
+  while IFS=, read -r URL_PATH SERVICE; do
+    AddSingleRoute ${URL_PATH} ${SERVICE}
   done < ${WORKSPACES_DB}
-
-
-  cat >${HAPROXY_CFG} <<EOL
-global
-
-defaults
-  timeout connect 5s
-  timeout client 30s
-  timeout server 30s
-  mode http
-
-frontend che
-  bind :8080
-
-  use_backend %[path,map_beg(/usr/local/etc/haproxy/cherouter.map)]
-
-  default_backend che-server
-
-${BACKENDS}
-
-backend che-server
-  cookie SERVERUSED insert indirect nocache
-  server che che:80
-EOL
 }
 
 function reconfigRouter() {
   GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
 
   # update configmap
-  oc create configmap haproxy-config --from-file ${HAPROXY_CFG} --from-file ${HAPROXY_ROUTER_MAP} -o yaml -n ${POC_NAMESPACE} --dry-run | oc replace -n ${POC_NAMESPACE} -f -
+  oc create configmap haproxy-config --from-file ${HAPROXY_CFG} --from-file ${HAPROXY_ROUTER_MAP} --from-file ${HAPROXY_BACKENDS_CFG} -o yaml -n ${POC_NAMESPACE} --dry-run | oc replace -n ${POC_NAMESPACE} -f -
   # update gateway pod's random annotation to force configmap reload
   oc patch pod ${GATEWAY_POD} -n ${POC_NAMESPACE} --patch "{\"metadata\": {\"annotations\": {\"random\": \"${RANDOM}\"} } }"
 }
