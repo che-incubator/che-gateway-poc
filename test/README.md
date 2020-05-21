@@ -56,16 +56,20 @@ TBD
     - `N++`
 
 #### Testcase 3 (`tc_3`)
-##### params
+##### params (on `kvm-01-guest20.lab.eng.brq.redhat.com`)
   - duration: 300s
-  - assert: 2000ms latency, response code 200, response payload '1'
-  - threads: 25
-  - target throughput: 3000op/min
+  - assert: 1500ms latency, response code 200, response payload '1'
+  - threads: 200
+  - target throughput: 20000op/min (333op/s)
 
 ##### scenario
   - prepare 1 workspace
   - repeat 5x
     - load for 300s
+
+#### why
+  - measure base latency of individual gateways
+  - detect if any gateway has issue to handle static load
 
 #### Testcase 4 (`tc_4`)
 TBD
