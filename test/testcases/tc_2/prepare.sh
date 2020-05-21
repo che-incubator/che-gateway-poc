@@ -2,15 +2,9 @@
 
 function prepareTestcase() {
   # prepare 26 workspaces
-  for N in {001..005}; do
-    for I in {001..005}; do
-      local WS="ws-${I}"
-      prepareNewWorkspace ${WS} "${POC_WSNAMESPACE}-${N}"
-    done
-  done
-  for I in {001..005}; do
+  for I in {001..030}; do
     local WS="ws-${I}"
-    prepareNewWorkspace ${WS} "${POC_WSNAMESPACE}-extra"
+    prepareNewWorkspace ${WS} "${POC_WSNAMESPACE}-${N}"
   done
 
   # actualy create infrastructure for all
