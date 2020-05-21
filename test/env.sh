@@ -28,7 +28,7 @@ readonly WORKSPACES_PREPARE_YAML=${WORKDIR}/workspaces.yaml_prep
 readonly WORKSPACES_PREPARED=${WORKDIR}/workspaces_prepared
 readonly JMETER_TEST_FILE=${WORKDIR}/test.jmx
 readonly TEST_PARAMS_FILE=${WORKDIR}/params.csv
-readonly TEST_STATS_FILE="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_stats_$( date +%s ).csv"
+readonly TEST_STATS_FILE="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( hostname )_$( date +%s ).csv"
 readonly OS_PROJECTS=${WORKDIR}/os_projects
 
 #. "$( dirname "${0}" )/functions/cleanup.sh"

@@ -1,3 +1,4 @@
 workdir/
 reports/
 prepareRhel.sh
+rsyncRhel.sh
