@@ -39,12 +39,12 @@ All common logic of testcases is at `<che-gateway-poc>/test/testcases/tc_<testca
 #### Testcase 1 (`tc_1`)
 TBD
 
-#### Testcase 2 (`tc_2`)
+#### Testcase 2 (`tc_2`) - Add new workspace under load
 ##### params
   - duration: 60s
   - assert: 1500ms latency, response code 200, response payload '1'
-  - threads: 25
-  - target throughput: 3000op/min
+  - threads: 200
+  - target throughput: 20000op/min
 
 ##### scenario
   - prepare 30 workspaces
@@ -55,7 +55,7 @@ TBD
     - after 30s add 1 prepared workspace to gateway
     - `N++`
 
-#### Testcase 3 (`tc_3`)
+#### Testcase 3 (`tc_3`) - Constant load with 1 workspace
 ##### params (on `kvm-01-guest20.lab.eng.brq.redhat.com`)
   - duration: 300s
   - assert: 1500ms latency, response code 200, response payload '1'
@@ -71,7 +71,7 @@ TBD
   - measure base latency of individual gateways
   - detect if any gateway has issue to handle static load
 
-#### Testcase 4 (`tc_4`)
+#### Testcase 4 (`tc_4`) - Constant load with 100 workspaces
   - same as `tc_3`, only with 100 workspaces
 
 ##### why

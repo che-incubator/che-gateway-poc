@@ -95,9 +95,7 @@ function writeTestAndFlushPreparedWorkspaces() {
   markPreparedWorkspacesToTest ${WORKSPACE_COUNT}
   echo "$( date +%s%N ): start reconfigure the gateway ..."
   if [ ${WORKSPACE_COUNT} == 1 ]; then
-    # uncomment when AddSingleRoute is implemented for all gateways
-    # AddSingleRoute $( tail -n 1 ${WORKSPACES_DB} | sed 's/,/ /g' )
-    FullGatewayReconfig
+    AddSingleRoute $( tail -n 1 ${WORKSPACES_DB} | sed 's/,/ /g' )
   else
     FullGatewayReconfig
   fi
