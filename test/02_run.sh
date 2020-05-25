@@ -30,10 +30,10 @@ function run() {
     kill ${ADD_WORKSPACES_PID}
   fi
 
-  cat ${REPORT_DIR}/dashboard/statistics.json
   if [ -f ${TEST_PARAMS_FILE} ]; then
     echo "${GATEWAY},${TESTCASE},$( IFS=","; echo "${LINE[*]}" ),$( cat ${REPORT_DIR}/dashboard/statistics.json | jq -r '.Total | [.sampleCount, .errorCount, .errorPct, .meanResTime, .minResTime, .maxResTime, .pct1ResTime, .pct2ResTime, .pct3ResTime, .throughput, .receivedKBytesPerSec, .sentKBytesPerSec] | map_values(tostring) | join(",")' )" >> ${TEST_STATS_FILE}
   fi
+  cat ${REPORT_DIR}/dashboard/statistics.json | jq .Total
 }
 
 # if there is params.csv in the testcase, read this file and run in the loop
