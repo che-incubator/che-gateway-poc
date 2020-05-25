@@ -33,11 +33,26 @@ Cleans the cluster (deletes projects with common prefix) and remove local workdi
 
 All common logic of testcases is at `<che-gateway-poc>/test/testcases/tc_<testcase>`. Gateway specific functions are then at `<che-gateway-poc>/<gateway>/functions` folder.
 
+Params are tuned for beaker machine `kvm-01-guest20.lab.eng.brq.redhat.com`. Results will vary significantly when running from other machine/network.
+
 #### Testcase 0 (`tc_0`)
   - testcase for debugging these scripts
 
-#### Testcase 1 (`tc_1`)
-TBD
+#### Testcase 1 (`tc_1`) - Continously add new workspaces under load
+##### params
+  - duration: 120s
+  - assert: 1500ms latency, response code 200, response payload '1'
+  - threads: 200
+  - target throughput: 20000op/min
+
+#### scenario
+  - prepare 30 workspaces
+  - configure gateway for 25 workspaces and load them
+  - after 30 seconds, add 1 workspace each 10 seconds up to 30 workspaces
+
+#### why
+  - detect if any gateway has measurable downtime under more stressed configuration update rate
+  - measure overall latency under more stressed config update
 
 #### Testcase 2 (`tc_2`) - Add new workspace under load
 ##### params
@@ -55,8 +70,12 @@ TBD
     - after 30s add 1 prepared workspace to gateway
     - `N++`
 
+##### why
+  - measure time to establish new route
+  - detect if any gateway has measurable downtime for already established routes when updating the configuration
+
 #### Testcase 3 (`tc_3`) - Constant load with 1 workspace
-##### params (on `kvm-01-guest20.lab.eng.brq.redhat.com`)
+##### params
   - duration: 300s
   - assert: 1500ms latency, response code 200, response payload '1'
   - threads: 200
