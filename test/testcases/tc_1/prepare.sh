@@ -1,8 +1,8 @@
 #!/bin/sh
 
 function prepareTestcase() {
-  # prepare 50 workspaces
-  for I in {001..050}; do
+  # prepare 30 workspaces
+  for I in {001..030}; do
     local WS="ws-${I}"
     prepareNewWorkspace ${WS}
   done
