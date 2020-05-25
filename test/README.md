@@ -73,6 +73,14 @@ TBD
 
 #### Testcase 4 (`tc_4`) - Constant load with 100 workspaces
   - same as `tc_3`, only with 100 workspaces
+  - 1 workspace per namespace
+
+##### why
+  - is performance under same load better/worse with 1 or many routes?
+
+#### Testcase 5 (`tc_5`) - Constant load with 500 workspaces
+  - same as `tc_3`, only with 500 workspaces
+  - 1 workspace per namespace
 
 ##### why
   - is performance under same load better/worse with 1 or many routes?
