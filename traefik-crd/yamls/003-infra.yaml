@@ -45,10 +45,6 @@ spec:
           ports:
             - name: web
               containerPort: 8000
-            - name: websecure
-              containerPort: 4443
-            - name: admin
-              containerPort: 8080
 
 ---
 apiVersion: v1
@@ -60,12 +56,6 @@ spec:
     - protocol: TCP
       name: web
       port: 8000
-    - protocol: TCP
-      name: admin
-      port: 8080
-    - protocol: TCP
-      name: websecure
-      port: 4443
   selector:
     app: che-gateway
 ---
