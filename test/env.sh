@@ -31,8 +31,16 @@ readonly TEST_PARAMS_FILE=${WORKDIR}/params.csv
 readonly TEST_STATS_FILE="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( hostname )_$( date +%s ).csv"
 readonly OS_PROJECTS=${WORKDIR}/os_projects
 
+# These can be overriden in the setup.sh of the testcases
+POD_TEMPLATE_FILE=chepod.yaml_template
+
 #. "$( dirname "${0}" )/functions/cleanup.sh"
 . "$( dirname "${0}" )/functions/prepare.sh"
 . "$( dirname "${0}" )/functions/workspace.sh"
 parseArgs "$@"
+
+if [ -f "${TESTCASE_DIR}/setup.sh" ]; then
+  . "${TESTCASE_DIR}/setup.sh"
+fi
+
 importTestFunctions

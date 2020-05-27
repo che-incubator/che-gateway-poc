@@ -5,6 +5,9 @@ set -e
 . "$( dirname "${0}" )/env.sh"
 
 function run() {
+  local IMAGE_ID=docker.io/justb4/jmeter:5.1.1
+  local JMETER_DIR=/opt/apache-jmeter-5.1.1
+
   # prepare report directory
   REPORT_DIR="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( date +%s )"
   mkdir -p ${REPORT_DIR}
@@ -17,14 +20,23 @@ function run() {
     ADD_WORKSPACES_PID=$!
   fi
 
+  local LIB_DIR=$( mktemp -d )
+  local CONTAINER_ID=$( docker create $IMAGE_ID )
+  docker cp ${CONTAINER_ID}:${JMETER_DIR}/lib/ext ${LIB_DIR}
+  docker rm ${CONTAINER_ID}
+  cp $( dirname "${0}" )/plugins/* ${LIB_DIR}/ext
+
   docker run --rm \
   -v ${REPORT_DIR}:${REPORT_DIR}:Z \
   -v ${BASE_DIR}:${BASE_DIR}:Z \
+  -v ${LIB_DIR}/ext:${JMETER_DIR}/lib/ext:Z \
   -e USER=${USER} \
   --add-host ${HOST}:${HOST_IP} \
-  docker.io/justb4/jmeter:5.1.1 \
+  $IMAGE_ID \
   -n -Jjmeter.reportgenerator.overall_granularity=1000 -e \
   -t ${JMETER_TEST_FILE} -l ${REPORT_DIR}/test.log -j ${REPORT_DIR}/jmeter.log -o ${REPORT_DIR}/dashboard "${@}"
+
+  rm -Rf ${LIB_DIR}
 
   if [ ! -z ${ADD_WORKSPACES_PID} ] && kill -0 ${ADD_WORKSPACES_PID} ; then
     kill ${ADD_WORKSPACES_PID}

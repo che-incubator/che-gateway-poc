@@ -12,16 +12,18 @@ function prepareWorkdir() {
   mkdir -p ${REPORTS_DIR}
 }
 
+# $1 - the name of the template to use for the workspace pod - default is the value of POD_TEMPLATE_FILE variable
 function prepareBaseInfra() {
+  local POD_TEMPLATE=${1:-${POD_TEMPLATE_FILE}}
   # the projects may linger on from previous runs, so let's wait until OpenShift gets its act together..
   until oc new-project ${POC_NAMESPACE}; do echo "Retrying..."; sleep 1; done
   oc apply -f ${YAMLS_DIR}/infra.yaml -n ${POC_NAMESPACE}
-  sed "s/{{NAME}}/che/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
+  sed "s/{{NAME}}/che/g" ${YAMLS_DIR}/${POD_TEMPLATE} | oc apply -n ${POC_NAMESPACE} -f -
   sed "s/{{HOST}}/${HOST}/g" ${YAMLS_DIR}/openshift.yaml_template | oc apply -n ${POC_NAMESPACE} -f -
 
   # project for workspaces
   #until oc new-project ${POC_WSNAMESPACE}; do echo "Retrying..."; sleep 1; done
-  #sed "s/{{NAME}}/${POC_WSNAMESPACE}/g;s/64Mi/1024Mi/g;s/100m/2/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${POC_WSNAMESPACE} -f -
+  #sed "s/{{NAME}}/${POC_WSNAMESPACE}/g;s/64Mi/1024Mi/g;s/100m/2/g" ${YAMLS_DIR}/${POD_TEMPLATE} | oc apply -n ${POC_WSNAMESPACE} -f -
 
   # write all current project into the file so we don't have to re-request it later
   oc get projects > ${OS_PROJECTS}

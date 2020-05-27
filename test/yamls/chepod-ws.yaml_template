@@ -1,0 +1,23 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: che
+  labels:
+    app: che
+spec:
+  containers:
+  - name: server
+    image: quay.io/lkrejci/websocket-echo
+    env:
+    - name: PORT
+      value: "8888"
+    - name: ADVERTISE_URI
+      value: "true"
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "64Mi"
+        cpu: "100m"

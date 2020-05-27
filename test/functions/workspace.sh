@@ -37,15 +37,17 @@ function createWorkspace() {
 }
 
 # $1 - number of workspaces that should be created
+# $2 - the name of the template to use for the workspace pod - default is the value of POD_TEMPLATE_FILE variable
 function createPreparedWorkspacesInfra() {
   WORKSPACE_COUNT=${1:-9999}
+  POD_TEMPLATE=${2:-${POD_TEMPLATE_FILE}}
   head -n ${WORKSPACE_COUNT} ${WORKSPACES_PREPARED} | while read -r WS NS; do
     echo "about to create ${WS} in ${NS}"
     #TODO: let caller prepare the namespace so this is not called gazzilion times
     #if namespace does not exist, create new namespace and che pod there
     if ! cat ${OS_PROJECTS} | egrep "${NS} "; then
       until oc new-project "${NS}"; do echo "Retrying..."; sleep 1; done
-      sed "s/{{NAME}}/${NS}/g" ${YAMLS_DIR}/chepod.yaml_template | oc apply -n ${NS} -f -
+      sed "s/{{NAME}}/${NS}/g" ${YAMLS_DIR}/${POD_TEMPLATE} | oc apply -n ${NS} -f -
       echo "${NS} Active" >> ${OS_PROJECTS}
     fi
 
