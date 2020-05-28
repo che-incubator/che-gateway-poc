@@ -5,6 +5,10 @@
 readonly GATEWAY=${1:-${GATEWAY:-haproxy-scripted}}
 readonly TESTCASE=${2:-${TESTCASE:-0}}
 
+# make sure these propagate to any other shells that we might be executing
+export GATEWAY
+export TESTCASE
+
 if [ -z ${USER} ]; then
   echo "\$USER variable is empty. You have to set it. It's used as prefix for created namespaces."
   exit 1
