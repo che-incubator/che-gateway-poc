@@ -8,12 +8,16 @@ metadata:
 spec:
   containers:
   - name: server
-    image: quay.io/lkrejci/websocket-echo
+    image: docker.io/lkrejci/websocket-echo
     env:
     - name: PORT
       value: "8888"
     - name: ADVERTISE_URI
       value: "true"
+    - name: HOST
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
     resources:
       requests:
         memory: "64Mi"
