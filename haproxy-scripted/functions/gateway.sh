@@ -23,6 +23,10 @@ function writeNewRoute() {
 backend ${SERVICE}
   cookie SERVERUSED insert indirect nocache
   http-request set-path %[path,regsub(^/${URL_PATH}/?,/)]
+
+  acl hdr_set_cookie_path res.hdr(Set-cookie) -m sub Path=
+  http-response replace-header Set-Cookie (.*Path=)(.*) \1/${URL_PATH}\2 if hdr_set_cookie_path
+
   server ${URL_PATH} ${SERVICE}:80
   " >> ${HAPROXY_BACKENDS_CFG}
 
