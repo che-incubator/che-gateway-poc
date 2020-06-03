@@ -15,7 +15,7 @@ spec:
   serviceAccountName: gateway-config
   containers:
   - name: traefik
-    image: lkrejci/traefik-openshift:2.2.0
+    image: quay.io/mvala/traefik:cookiePrefixPath
     volumeMounts:
     - name: config
       mountPath: /etc/traefik

@@ -28,7 +28,7 @@ function AddSingleRoute() {
                         ws_${NAME}:
                             rule: \"PathPrefix(\`/${WS_PATH}\`)\"
                             service: ws_${NAME}
-                            middlewares: [\"ws_${NAME}\"]
+                            middlewares: [\"ws_${NAME}\",\"ws_${NAME}_cookiepath\"]
                             priority: 2
                     services:
                         ws_${NAME}:
@@ -40,6 +40,9 @@ function AddSingleRoute() {
                             stripPrefix:
                                 prefixes:
                                 - \"/${WS_PATH}\"
+                        ws_${NAME}_cookiepath:
+                            headers:
+                                prefixCookiePath: \"/${WS_PATH}\"
     "
     echo "${CONFIG_MAP}" | oc apply -n ${POC_NAMESPACE} -f -
     NUMBER_OF_WORKSPACES=$(($NUMBER_OF_WORKSPACES + 1))
