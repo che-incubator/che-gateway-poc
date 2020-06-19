@@ -5,7 +5,12 @@ function prepareWorkdir() {
   rm -rf ${WORKDIR} && mkdir -p ${WORKDIR}
   echo "name,host,path" > ${URLS_CSV}
   touch "${WORKSPACES_DB}"
-  cp "${TESTCASES_DIR}/tc_${TESTCASE}/test.jmx" ${JMETER_TEST_FILE}
+  if [ -f "${TESTCASES_DIR}/tc_${TESTCASE}/test.jmx" ]; then
+    cp "${TESTCASES_DIR}/tc_${TESTCASE}/test.jmx" ${JMETER_TEST_FILE}
+  fi
+  if [ -f "${TESTCASES_DIR}/tc_${TESTCASE}/test.sh" ]; then
+    cp "${TESTCASES_DIR}/tc_${TESTCASE}/test.sh" ${MANUAL_TEST_FILE}
+  fi
   if [ -f "${TESTCASES_DIR}/tc_${TESTCASE}/params.csv" ]; then
     cp "${TESTCASES_DIR}/tc_${TESTCASE}/params.csv" ${TEST_PARAMS_FILE}
   fi

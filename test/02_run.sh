@@ -5,13 +5,12 @@ set -e
 . "$( dirname "${0}" )/env.sh"
 
 function run() {
-  local IMAGE_ID=docker.io/justb4/jmeter:5.1.1
-  local JMETER_DIR=/opt/apache-jmeter-5.1.1
-
   # prepare report directory
   REPORT_DIR="${REPORTS_DIR}/${GATEWAY}_tc${TESTCASE}_$( date +%s )"
   mkdir -p ${REPORT_DIR}
-  cp ${JMETER_TEST_FILE} ${REPORT_DIR}/test.xml
+  if [ -f "${JMETER_TEST_FILE}" ]; then
+    cp ${JMETER_TEST_FILE} ${REPORT_DIR}/test.xml
+  fi
   echo "${@}" >> ${REPORT_DIR}/params.txt
 
   # run testcase's actions
@@ -19,6 +18,21 @@ function run() {
     sh -x ${TESTCASE_DIR}/actions.sh > ${REPORT_DIR}/actions.log 2>&1 &
     ADD_WORKSPACES_PID=$!
   fi
+
+  if [ -f "${MANUAL_TEST_FILE}" ]; then
+    run_manual ${@}
+  else
+    run_jmeter ${@}
+  fi
+}
+
+function run_manual() {
+  . "${MANUAL_TEST_FILE}"
+}
+
+function run_jmeter() {
+  local IMAGE_ID=docker.io/justb4/jmeter:5.1.1
+  local JMETER_DIR=/opt/apache-jmeter-5.1.1
 
   local LIB_DIR=$( mktemp -d )
   local CONTAINER_ID=$( docker create $IMAGE_ID )
