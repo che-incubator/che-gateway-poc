@@ -25,6 +25,7 @@ function AddSingleRoute() {
       ws-$NAME: |
         location /${WS_PATH}/ {
           proxy_pass http://${SERVICE}/;
+          proxy_redirect / http://${HOST}/${WS_PATH}/;
           proxy_cookie_path / /${WS_PATH}/;
           proxy_http_version 1.1;
           proxy_set_header Upgrade \$http_upgrade;
@@ -32,6 +33,7 @@ function AddSingleRoute() {
         }
         location /${WS_PATH} {
           proxy_pass http://${SERVICE}/;
+          proxy_redirect / http://${HOST}/${WS_PATH}/;
           proxy_cookie_path / /${WS_PATH}/;
           proxy_http_version 1.1;
           proxy_set_header Upgrade \$http_upgrade;
