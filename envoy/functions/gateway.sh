@@ -31,10 +31,10 @@ function genConfig() {
 }
 
 function reconfigure() {
-  GATEWAY_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-gateway )
+  CONTROL_POD=$( oc get pods -o json -n ${POC_NAMESPACE} | jq '.items[].metadata.name' -r | grep che-envoy-control )
 
   # update configmap
   oc create configmap gateway-workspaces --from-file ${ENVOY_BACKENDS_CFG} -o yaml -n ${POC_NAMESPACE} --dry-run | oc replace -n ${POC_NAMESPACE} -f -
   # update gateway pod's random annotation to force configmap reload
-  oc patch pod ${GATEWAY_POD} -n ${POC_NAMESPACE} --patch "{\"metadata\": {\"annotations\": {\"random\": \"${RANDOM}\"} } }"
+  oc patch pod ${CONTROL_POD} -n ${POC_NAMESPACE} --patch "{\"metadata\": {\"annotations\": {\"random\": \"${RANDOM}\"} } }"
 }

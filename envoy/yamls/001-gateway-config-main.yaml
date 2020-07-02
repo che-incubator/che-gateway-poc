@@ -5,4 +5,4 @@ kind: ConfigMap
 metadata:
   name: gateway-workspaces
 data:
-  backends.csv: ""
+  workspaces.csv: ""

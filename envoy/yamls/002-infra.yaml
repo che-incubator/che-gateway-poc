@@ -30,6 +30,7 @@ spec:
     containers:
     - name: envoy-control
       image: quay.io/lkrejci/che-envoy-control:latest
+      imagePullPolicy: Always
       # the "che_service" is the name of the cluster in envoy config that points to the che server pod.
       command: ["java", "-jar", "che-envoy.jar", "/backends/workspaces.csv", "che_service"]
       volumeMounts:
@@ -81,84 +82,86 @@ data:
           grpc_services:
             envoy_grpc:
               cluster_name: che_xds
-    
+
     static_resources:
       listeners:
-        - name: all_workspaces
-          address:
-            socket_address: { address: 0.0.0.0, port_value: 8080 }
-          filter_chains:
-            - filters:
-              - name: workspaces
-                typed_config:
-                  "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
-                  stat_prefix: workspaces_http
-                  codec_type: AUTO
-                  rds:
-                    route_config_name: backends
-                    config_source:
-                      api_config_source:
-                        api_type: GRPC
-                        grpc_services:
-                          envoy_grpc:
-                            cluster_name: che_xds
-                  http_filters:
-                    - name: envoy.filters.http.router
+      - name: all_workspaces
+        address:
+          socket_address: { address: 0.0.0.0, port_value: 8080 }
+        filter_chains:
+          - filters:
+            - name: workspaces
+              typed_config:
+                "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
+                stat_prefix: workspaces_http
+                codec_type: AUTO
+                upgrade_configs:
+                - upgrade_type: websocket
+                rds:
+                  route_config_name: backends
+                  config_source:
+                    api_config_source:
+                      api_type: GRPC
+                      grpc_services:
+                        envoy_grpc:
+                          cluster_name: che_xds
+                http_filters:
+                  - name: envoy.filters.http.router
       clusters:
-        - name: che_service
-          connect_timeout: 0.25s
-          type: STRICT_DNS
-          lb_policy: ROUND_ROBIN
-          load_assignment:
-            cluster_name: che_service
-            endpoints:
-              - lb_endpoints:
+      - name: che_service
+        connect_timeout: 0.25s
+        type: STRICT_DNS
+        lb_policy: ROUND_ROBIN
+        load_assignment:
+          cluster_name: che_service
+          endpoints:
+            - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: che
+                      port_value: 80
+            
+      # We need to tell envoy statically where to find our management server. This is then referenced in the
+      # dynamically configured portions of the config.
+      - name: che_xds
+        connect_timeout: 0.25s
+        type: STRICT_DNS
+        lb_policy: ROUND_ROBIN
+        http2_protocol_options: {}
+        upstream_connection_options:
+          # configure a TCP keep-alive to detect and reconnect to the admin
+          # server in the event of a TCP socket half open connection
+          tcp_keepalive: {}
+        load_assignment:
+          cluster_name: che_xds
+          endpoints:
+            - lb_endpoints:
                 - endpoint:
                     address:
                       socket_address:
-                        address: che
-                        port_value: 80
-              
-        # We need to tell envoy statically where to find our management server. This is then referenced in the
-        # dynamically configured portions of the config.
-        - name: che_xds
-          connect_timeout: 0.25s
-          type: STRICT_DNS
-          lb_policy: ROUND_ROBIN
-          http2_protocol_options: {}
-          upstream_connection_options:
-            # configure a TCP keep-alive to detect and reconnect to the admin
-            # server in the event of a TCP socket half open connection
-            tcp_keepalive: {}
-          load_assignment:
-            cluster_name: che_xds
-            endpoints:
-              - lb_endpoints:
-                  - endpoint:
-                      address:
-                        socket_address:
-                          address: che-envoy-control
-                          port_value: 12345
-# ---
-# # expose Envoy's admin interface for debugging purposes  
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: envoy-admin
-# spec:
-#   selector:
-#     app: che-gateway
-#   ports:
-#   - port: 80
-#     targetPort: 9901
-#     protocol: TCP
-# ---
-# apiVersion: route.openshift.io/v1
-# kind: Route
-# metadata:
-#   name: envoy-admin
-# spec:
-#   host: envoy-admin-lkrejci-singlehostpoc.apps-crc.testing
-#   to:
-#     kind: Service
-#     name: envoy-admin
+                        address: che-envoy-control
+                        port_value: 12345
+---
+# expose Envoy's admin interface for debugging purposes  
+apiVersion: v1
+kind: Service
+metadata:
+  name: envoy-admin
+spec:
+  selector:
+    app: che-gateway
+  ports:
+  - port: 80
+    targetPort: 9901
+    protocol: TCP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: envoy-admin
+spec:
+  host: envoy-admin-lkrejci-singlehostpoc.apps.che-dev.x6e0.p1.openshiftapps.com
+  to:
+    kind: Service
+    name: envoy-admin
